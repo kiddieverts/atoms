@@ -14,14 +14,17 @@ function anything()
 	var r = prepareRhythm(u[1]);
 	
 	var pitches = p.map(function (currentPitch) { 
+		return currentPitch;
+		/*
 		if (currentPitch === null) { 
 			return 0; 
 		} else { 
 			return currentPitch; 
 		}
+		*/
 	}
 		
-	outlet(0, pitches);
+	outlet(0, p);
 	outlet(1, r);
 }
 
