@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Metro } from './components/Metro';
 import { getMelody } from './music/melody-picker';
 import { transformAndPack, transpose } from './music/melody-transform';
 import { pack, unpack } from './utils/packing';
 import { doUnpack } from './music/melody-unpacker-two';
+import { MidiPlayer } from './components/MidiPlayer';
+import { TOTAL_NUMBER_OF_TICKS } from './constant';
 
 const calculateMelody = (m, melodyId) => {
-  let totalNumberOfBeats = 4 * 4 * 8;
   let nextStep = {}
   let playingCount = {}
   let timeline = [];
 
   let [pitches, rhythm] = doUnpack(m);
 
-  for (let counter = 0; counter < totalNumberOfBeats; counter++) {
+  for (let counter = 0; counter < TOTAL_NUMBER_OF_TICKS; counter++) {
     let next = nextStep[melodyId];
 
     const ns = (next === undefined)
@@ -75,7 +75,6 @@ const App = () => {
   }, [melody, transNum, oct]);
 
   const divider = 4.0;
-
   const tempo = 118.0;
 
   const handleChangeMelody = (val) => setMelody(val);
@@ -139,14 +138,16 @@ const App = () => {
 
   const handleChangeOct = (v) => setOct(v);
 
+  let com = [];
+
   if (!!finalMelody && !!finalMelody2 && !!finalMelody3 && !!finalMelody4) {
-    const com = comb([finalMelody, finalMelody2, finalMelody3, finalMelody4]);
-    console.log('com', com)
+    com = comb([finalMelody, finalMelody2, finalMelody3, finalMelody4]);
+    console.log(com);
   }
 
   return <>
-    <Metro
-      melodies={melodies}
+    <MidiPlayer
+      melodies={com}
       audioContext={audioContext}
       isStopped={isStopped}
       tempo={tempo}
