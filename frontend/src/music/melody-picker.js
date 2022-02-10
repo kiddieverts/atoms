@@ -1,4 +1,4 @@
-var melody1 = [
+const melody1 = [
   [69, 4], // a1
   [64, 4], // e1
   [69, 4], // a1
@@ -15,7 +15,7 @@ var melody1 = [
   [74, 4] // d1
 ];
 
-var melody2 = [
+const melody2 = [
   [null, 4], // silence
   [72, 4], // c2
   [77, 4], // f2 
@@ -31,7 +31,7 @@ var melody2 = [
   [76, 8], // e2
 ];
 
-var melody3 = [
+const melody3 = [
   [null, 8], // silence
   [81, 12], // a2
   [72, 4], // c2
@@ -42,7 +42,7 @@ var melody3 = [
   [76, 8] // e2
 ];
 
-var melody4 = [
+const melody4 = [
   [60, 8], // c1
   [null, 8], // silence
   [60, 1], // c1

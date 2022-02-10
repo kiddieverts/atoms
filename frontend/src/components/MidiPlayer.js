@@ -2,21 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useInstrument } from '../hooks/useInstrument';
 import { TOTAL_NUMBER_OF_TICKS } from '../constant';
 
-let nextNoteTime = 0.0;
+let nextTick = 0.0;
 let globalCnt = 0;
-let theMelodies = undefined;
+let theMelodies = [];
 
-const nextNote = (tempo, div) => {
-  const interval = 60.0 / tempo / div;
-  nextNoteTime += interval;
+const getNextTick = (tempo, div) => {
+  const interval = 60.0 / tempo / 4.0;
+  nextTick += interval;
 }
 
-export const MidiPlayer = ({ isStopped, audioContext, tempo, divider, melodies }) => {
+const MidiPlayer = ({ isStopped, audioContext, tempo, melodies }) => {
   const [playFn, samplesReady] = useInstrument(audioContext);
   const [timerId, setTimerId] = useState(undefined);
 
   useEffect(() => {
     theMelodies = melodies;
+    globalCnt = 0;
   }, [melodies]);
 
   const scheduler = () => {
@@ -26,10 +27,10 @@ export const MidiPlayer = ({ isStopped, audioContext, tempo, divider, melodies }
     const scheduleAheadTime = 0.1; // How far ahead to schedule audio (sec)
     const lookahead = 25.0; // How frequently to call scheduling function (in milliseconds)
 
-    while (nextNoteTime < audioContext.currentTime + scheduleAheadTime) {
-      nextNote(tempo, divider);
+    while (nextTick < audioContext.currentTime + scheduleAheadTime) {
+      getNextTick(tempo);
 
-      onBang(nextNoteTime, theMelodies, playFn);
+      onBang(nextTick, theMelodies, playFn);
       globalCnt = globalCnt + 1;
     }
     setTimerId(window.setTimeout(scheduler, lookahead));// TODO: Cancel timeout on stop
@@ -55,22 +56,37 @@ export const MidiPlayer = ({ isStopped, audioContext, tempo, divider, melodies }
   </>
 };
 
-export const onBang = (nextTime, melo, playFn) => {
+const onBang = (nextTick, melodies, playFn) => {
   if (globalCnt >= TOTAL_NUMBER_OF_TICKS) {
     globalCnt = 0;
   }
 
-  if (!melo) return;
+  if (!melodies) return;
 
-  const x = melo[globalCnt].filter(r => r[1] === null);
-  if (melo[globalCnt].length === x.length) {
-    return;
-  }
+  // console.log(globalCnt, melo[globalCnt])
 
-  for (let y of melo[globalCnt]) {
-    if (y[1] !== null) {
-      const duration = 1;
-      playFn(y[0], nextTime, duration)
+  // const x = melo[globalCnt].filter(r => !r[1]);
+
+  // if (melo[globalCnt].length === x.length) {
+  //   return;
+  // }
+
+  const melo = melodies[globalCnt];
+
+  for (let y of melo) {
+    // for (let aa of y) {
+    if (!!y[1]) {
+      playFn(y[0], nextTick, 1)
+
     }
+    // }
+    // if (!!y[1]) {
+    //   console.log('HÆ', y)
+    //   // const duration = 1;
+    //   // playFn(y[0], nextTick, duration)
+    // }
   }
+
 }
+
+export default MidiPlayer;
