@@ -1,4 +1,4 @@
-const melody1 = [
+const melodyA = [
   [69, 4], // a1
   [64, 4], // e1
   [69, 4], // a1
@@ -15,7 +15,7 @@ const melody1 = [
   [74, 4] // d1
 ];
 
-const melody2 = [
+const melodyB = [
   [null, 4], // silence
   [72, 4], // c2
   [77, 4], // f2 
@@ -31,7 +31,7 @@ const melody2 = [
   [76, 8], // e2
 ];
 
-const melody3 = [
+const melodyC = [
   [null, 8], // silence
   [81, 12], // a2
   [72, 4], // c2
@@ -42,7 +42,7 @@ const melody3 = [
   [76, 8] // e2
 ];
 
-const melody4 = [
+const melodyD = [
   [60, 8], // c1
   [null, 8], // silence
   [60, 1], // c1
@@ -60,6 +60,6 @@ const melody4 = [
 ];
 
 export const getMelody = (numb) => {
-  var melodies = [melody1, melody2, melody3, melody4];
+  var melodies = [melodyA, melodyB, melodyC, melodyD];
   return melodies[numb - 1].map(([a, b]) => [a - 12 - 12 - 12, b])
 }

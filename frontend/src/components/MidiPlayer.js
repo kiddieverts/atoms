@@ -6,17 +6,13 @@ let nextTick = 0.0;
 let globalCnt = 0;
 let theMelodies = [];
 
-const getNextTick = (tempo, div) => {
-  const interval = 60.0 / tempo / 4.0;
-  nextTick += interval;
-}
-
 const MidiPlayer = ({ isStopped, audioContext, tempo, melodies }) => {
   const [playFn, samplesReady] = useInstrument(audioContext);
   const [timerId, setTimerId] = useState(undefined);
 
   useEffect(() => {
     theMelodies = melodies;
+    // Reset counter whenever a new melody is received
     globalCnt = 0;
   }, [melodies]);
 
@@ -56,37 +52,25 @@ const MidiPlayer = ({ isStopped, audioContext, tempo, melodies }) => {
   </>
 };
 
+const getNextTick = (tempo, div) => {
+  const interval = 60.0 / tempo / 4.0;
+  nextTick += interval;
+}
+
 const onBang = (nextTick, melodies, playFn) => {
+  // Loop
   if (globalCnt >= TOTAL_NUMBER_OF_TICKS) {
     globalCnt = 0;
   }
 
-  if (!melodies) return;
+  const tick = melodies[globalCnt];
 
-  // console.log(globalCnt, melo[globalCnt])
-
-  // const x = melo[globalCnt].filter(r => !r[1]);
-
-  // if (melo[globalCnt].length === x.length) {
-  //   return;
-  // }
-
-  const melo = melodies[globalCnt];
-
-  for (let y of melo) {
-    // for (let aa of y) {
-    if (!!y[1]) {
-      playFn(y[0], nextTick, 1)
-
+  for (let [p, r] of tick) {
+    if (!!r) {
+      const duration = 1;
+      playFn(p, nextTick, duration)
     }
-    // }
-    // if (!!y[1]) {
-    //   console.log('HÆ', y)
-    //   // const duration = 1;
-    //   // playFn(y[0], nextTick, duration)
-    // }
   }
-
 }
 
 export default MidiPlayer;

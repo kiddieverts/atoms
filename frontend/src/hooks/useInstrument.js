@@ -153,6 +153,7 @@ export const useInstrument = (audioContext) => {
 
     if (!noteToPlay) return;
 
+    // Return if note is out of range
     if (!notes[noteToPlay]) return;
 
     const [, fName] = notes[noteToPlay];
