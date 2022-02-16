@@ -3,10 +3,17 @@ import { useInstrument } from '../hooks/useInstrument';
 import { TOTAL_NUMBER_OF_TICKS } from '../constant';
 
 let nextTick = 0.0;
-let globalCnt = 0;
 let theMelodies = [];
+let globalCnt = 0;
+let megaGlobalCount = -1;
 
-const MidiPlayer = ({ isStopped, audioContext, tempo, melodies }) => {
+const reset = () => {
+  globalCnt = 0;
+  megaGlobalCount = -1;
+  nextTick = 0.0;
+}
+
+const MidiPlayer = ({ isStopped, audioContext, tempo, onUpdateCounter, melodies }) => {
   const [playFn, samplesReady] = useInstrument(audioContext);
   const [timerId, setTimerId] = useState(undefined);
 
@@ -27,28 +34,28 @@ const MidiPlayer = ({ isStopped, audioContext, tempo, melodies }) => {
       getNextTick(tempo);
 
       onBang(nextTick, theMelodies, playFn);
+      onUpdateCounter(megaGlobalCount);
       globalCnt = globalCnt + 1;
+      megaGlobalCount = megaGlobalCount + 1;
     }
     setTimerId(window.setTimeout(scheduler, lookahead));// TODO: Cancel timeout on stop
-  }
-
-  const handlePlay = () => {
-    audioContext.resume();
-    scheduler();
   }
 
   useEffect(() => {
     if (isStopped === true) {
       window.clearTimeout(timerId);
+      reset();
+    } else {
+      audioContext.resume();
+      scheduler();
     }
   }, [isStopped]);
 
   return <>{
     samplesReady
       ? <></>
-      : <h1>Loading...</h1>
+      : <h1>Loading samples...</h1>
   }
-    <button onClick={handlePlay}>PLAY</button>
   </>
 };
 

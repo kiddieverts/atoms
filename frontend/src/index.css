@@ -20,17 +20,42 @@ body {
   color: pink;
 }
 
+main {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+  height: 100vh;
+}
+
+
 .selected {
   background-color: rgb(249, 224, 0);
+  color: black !important;
+}
+
+.button2 {
+  border-color: gray;
+  color: gray;
+}
+
+.button2-selected {
+  border-color: gray !important;
+   background-color: gray;
+  color: black !important;
 }
 
 .tile {
   /* border-radius: 50%; */
 }
 
-h1{
-  color: white;
+h1 {
+  color: rgb(249, 224, 0);
 }
+
+.faint {
+    color: gray;
+ }
 
 .cent{
   display: flex;
@@ -54,6 +79,16 @@ button {
   width: 100px;
   background-color: transparent;
   color: rgb(249, 224, 0);
+  font-size: 24px;
+  cursor: pointer;
+  margin: 8px;
+}
+
+.buttonbig {
+  border: 2px solid gray;
+  height: 64px;
+  width: 200px;
+  color: gray;
   font-size: 24px;
   cursor: pointer;
   margin: 8px;
