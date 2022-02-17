@@ -14,17 +14,18 @@ const App = () => {
   const audioContext = new AudioContext();
 
   const [melodyNumber, setMelodyNumber] = useState(1);
-  const [transNum, setTransNum] = useState(1);
-  const [oct, setOct] = useState(1);
-  const [numberOfVoices, setNumberOfVoices] = useState(1);
+  const [transNum, setTransNum] = useState(2);
+  const [oct, setOct] = useState(3);
+  const [numberOfVoices, setNumberOfVoices] = useState(4);
   const [voices, setVoices] = useState([]);
 
-  const tempo = 118.0;
+  const [tempoNum, setTempoNum] = useState(2);
   const [max, setMax] = useState(MAX_LENGTH);
   const [isStopped, setIsStopped] = useState(true);
   const [mode, setMode] = useState('');
   const [theCnt, setTheCnt] = useState(0);
   const [theSong, setTheSong] = useState({});
+  const [tempo, setTempo] = useState(120.0);
 
   useEffect(() => {
     const voiceA = transpose(oct, transformAndPack(transNum, getMelody(melodyNumber)));
@@ -33,7 +34,7 @@ const App = () => {
     const voiceD = generateVoiceD(voiceA);
 
     setVoices(generateMelodies(voiceA, voiceB, voiceC, voiceD));
-  }, [melodyNumber, transNum, oct, numberOfVoices]);
+  }, [melodyNumber, transNum, oct, numberOfVoices, tempoNum]);
 
   const handleStop = () => {
     setIsStopped(true);
@@ -56,10 +57,10 @@ const App = () => {
     if (mode === 'rec') {
       addStep();
     }
-  }, [melodyNumber, transNum, oct, numberOfVoices]);
+  }, [melodyNumber, transNum, oct, numberOfVoices, tempoNum]);
 
   const addStep = () => {
-    const preset = [melodyNumber, transNum, oct, numberOfVoices];
+    const preset = [melodyNumber, transNum, oct, numberOfVoices, tempoNum];
     setTheSong(old => ({ ...old, [theCnt]: preset }));
   }
 
@@ -85,11 +86,12 @@ const App = () => {
         handleStop();
         return;
       }
-      const [mn, tn, oc, nv] = u;
+      const [mn, tn, oc, nv, tp] = u;
       setMelodyNumber(mn);
       setTransNum(tn);
       setOct(oc);
       setNumberOfVoices(nv);
+      setTempoNum(tp);
     }
   }
 
@@ -144,11 +146,33 @@ const App = () => {
     }
   }
 
+  useEffect(() => {
+    console.log('tempoNum', tempoNum)
+    setTempo(getTempo(tempoNum));
+  }, [tempoNum]);
+
+  const getTempo = (t) => {
+    switch (t) {
+      case 1:
+        return 30.0
+      case 2:
+        return 90.0
+      case 3:
+        return 120.0
+      case 4:
+        return 180.0
+      default:
+        return;
+    }
+  }
+
   return <>
     <main>
       <div>
 
         <h1 className="faint">{getModeText(mode)}</h1>
+
+        {/* <h3>{tempo} bpm</h3> */}
 
         <MidiPlayer
           melodies={voices}
@@ -167,6 +191,8 @@ const App = () => {
           onChangeTransformation={setTransNum}
           onChangeOct={setOct}
           onChangeNumberOfMel={setNumberOfVoices}
+          onChangeTempo={setTempoNum}
+          tempoNum={tempoNum}
         />
 
         <div style={{ height: '100px' }}></div>

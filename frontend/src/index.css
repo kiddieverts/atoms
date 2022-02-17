@@ -35,8 +35,8 @@ main {
 }
 
 .button2 {
-  border-color: gray;
-  color: gray;
+  border-color: rgb(69, 62, 2);;
+  color: rgb(69, 62, 2);;
 }
 
 .button2-selected {
@@ -45,8 +45,16 @@ main {
   color: black !important;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
 .tile {
-  /* border-radius: 50%; */
+  cursor: pointer;
+  height: 64px;
+  width: 64px;
+  margin: 2px;
 }
 
 h1 {
@@ -61,9 +69,12 @@ h1 {
   display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
-	justify-content: center;
+	justify-content: right;
 	align-items: center;
 	align-content: stretch;
+  width: 120px;
+  text-align: right;
+  padding-right: 24px;
 }
 
 .boxx {
@@ -88,7 +99,7 @@ button {
   border: 2px solid gray;
   height: 64px;
   width: 200px;
-  color: gray;
+  color: rgb(69, 62, 2);
   font-size: 24px;
   cursor: pointer;
   margin: 8px;
