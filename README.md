@@ -42,3 +42,11 @@ Minting compostions costs 0.04 ETH and the amount goes 100% to block owners as r
 ### Phase 3
 
 Phase 3 depends on each collection. The first collection will have a competition where you can submit your composition. One composition will be selected as winner, rendered as sheet music and performed by a pianist. That 1/1 performance will be airdropped to the winner.
+
+## Wen Whitelist ?
+
+TBA
+
+## How can I contribute
+
+There will be tests on Rinkeby test network and we will user testing via video calls to make sure we are on the right track. How to get in touch? TBA
