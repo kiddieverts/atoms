@@ -20,25 +20,61 @@ body {
   color: pink;
 }
 
+main {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+  height: 100vh;
+}
+
+
 .selected {
   background-color: rgb(249, 224, 0);
+  color: black !important;
+}
+
+.button2 {
+  border-color: rgb(69, 62, 2);;
+  color: rgb(69, 62, 2);;
+}
+
+.button2-selected {
+  border-color: gray !important;
+   background-color: gray;
+  color: black !important;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
 }
 
 .tile {
-  /* border-radius: 50%; */
+  cursor: pointer;
+  height: 64px;
+  width: 64px;
+  margin: 2px;
 }
 
-h1{
-  color: white;
+h1 {
+  color: rgb(249, 224, 0);
 }
+
+.faint {
+    color: gray;
+ }
 
 .cent{
   display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
-	justify-content: center;
+	justify-content: right;
 	align-items: center;
 	align-content: stretch;
+  width: 120px;
+  text-align: right;
+  padding-right: 24px;
 }
 
 .boxx {
@@ -51,9 +87,19 @@ button {
   /* border-radius: 8px; */
   border: 2px solid rgb(249, 224, 0);
   height: 64px;
-  width: 100px;
+  min-width: 100px;
   background-color: transparent;
   color: rgb(249, 224, 0);
+  font-size: 24px;
+  cursor: pointer;
+  margin: 8px;
+}
+
+.buttonbig {
+  border: 2px solid gray;
+  height: 64px;
+  width: 200px;
+  color: rgb(69, 62, 2);
   font-size: 24px;
   cursor: pointer;
   margin: 8px;

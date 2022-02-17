@@ -1,129 +1,214 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { Metro } from './components/Metro';
+
+import { combineMelodies } from './utils/combineMelodies';
+import { generateVoiceB, generateVoiceC, generateVoiceD } from './music/melody-generator';
 import { getMelody } from './music/melody-picker';
 import { transformAndPack, transpose } from './music/melody-transform';
-import { pack, unpack } from './utils/packing';
+import MidiPlayer from './components/MidiPlayer';
+import Pads from './components/Pads';
+
+const MAX_LENGTH = 1000000000;
 
 const App = () => {
   const audioContext = new AudioContext();
-  const [isStopped, setIsStopped] = useState(false);
 
-  const [melody, setMelody] = useState(4);
-  const [transNum, setTransNum] = useState(0);
-  const [finalMelody, setFinalMelody] = useState(undefined);
-  const [oct, setOct] = useState(0);
-  const [numberOfMel, setNumberOfMel] = useState(1);
+  const [melodyNumber, setMelodyNumber] = useState(1);
+  const [transNum, setTransNum] = useState(2);
+  const [oct, setOct] = useState(3);
+  const [numberOfVoices, setNumberOfVoices] = useState(4);
+  const [voices, setVoices] = useState([]);
+
+  const [tempoNum, setTempoNum] = useState(2);
+  const [max, setMax] = useState(MAX_LENGTH);
+  const [isStopped, setIsStopped] = useState(true);
+  const [mode, setMode] = useState('');
+  const [theCnt, setTheCnt] = useState(0);
+  const [theSong, setTheSong] = useState({});
+  const [tempo, setTempo] = useState(120.0);
 
   useEffect(() => {
-    const finalMel = transpose(oct, transformAndPack(transNum, getMelody(melody)));
-    setFinalMelody(finalMel);
-  }, [melody, transNum, oct]);
+    const voiceA = transpose(oct, transformAndPack(transNum, getMelody(melodyNumber)));
+    const voiceB = generateVoiceB(voiceA);
+    const voiceC = generateVoiceC(voiceA);
+    const voiceD = generateVoiceD(voiceA);
 
-  const divider = 4.0;
+    setVoices(generateMelodies(voiceA, voiceB, voiceC, voiceD));
+  }, [melodyNumber, transNum, oct, numberOfVoices, tempoNum]);
 
-  const tempo = 118.0;
-
-  const handleChangeMelody = (val) => setMelody(val);
-  const handleStop = () => setIsStopped(true);
-
-  const handleChangeTransformation = (v) => setTransNum(v);
-
-  const transFormFn = (melo, currentStep, timesPlayed) => {
-    let [pitches, rhythm] = unpack(melo);
-
-    return pack(pitches, rhythm);
+  const handleStop = () => {
+    setIsStopped(true);
+    setMode('');
+    if (mode === 'rec') {
+      const s = theSong;
+      setMax(theCnt);
+      saveSong(s, theCnt);
+      setTheSong({});
+      setMode('');
+    }
   }
 
-  const finalMelody2 = !!finalMelody ? [...finalMelody].map(m => {
-    let [p, r] = m;
+  const generateMelodies = (voiceA, voiceB, voiceC, voiceD) => {
+    const all = [voiceA, voiceB, voiceC, voiceD];
+    return combineMelodies(all.slice(0, numberOfVoices));
+  }
 
-    return [p + 12, r + 2]
-  }).slice(2, 8).reverse() : undefined;
+  useEffect(() => {
+    if (mode === 'rec') {
+      addStep();
+    }
+  }, [melodyNumber, transNum, oct, numberOfVoices, tempoNum]);
 
-  const finalMelody3 = !!finalMelody ? [...finalMelody].map(m => {
-    let [p, r] = m;
+  const addStep = () => {
+    const preset = [melodyNumber, transNum, oct, numberOfVoices, tempoNum];
+    setTheSong(old => ({ ...old, [theCnt]: preset }));
+  }
 
-    return [p - 12, r + 1]
-  }).slice(5, 12) : undefined;
+  useEffect(() => {
+    if (!isStopped && mode === 'rec' && Object.keys(theSong).length === 0) {
+      addStep();
+    }
+  }, [isStopped]);
 
-  const finalMelody4 = !!finalMelody ? [...finalMelody].map(m => {
-    let [p, r] = m;
+  const handleUpdateCounter = (cnt) => {
+    if (cnt > max) {
+      handleStop();
+      throw new Error(''); // Forces playback to stop. TODO: Find a better solution
+    }
+    setTheCnt(cnt);
 
-    const rr = (r === 4 || r === 2) ? 1 : 2
-    const pp = (r === 1 || r === 4) ? p : p - 5;
-    return [pp, rr];
-  }).reverse().slice(3, 8) : undefined;
+    if (mode === 'listen') {
+      const u = theSong[cnt + 1];
+      if (!u) {
+        return;
+      }
+      if (u.length === 0) {
+        handleStop();
+        return;
+      }
+      const [mn, tn, oc, nv, tp] = u;
+      setMelodyNumber(mn);
+      setTransNum(tn);
+      setOct(oc);
+      setNumberOfVoices(nv);
+      setTempoNum(tp);
+    }
+  }
 
-  const getMelodies = () => {
-    const arr = [];
+  const doPlay = () => setIsStopped(false);
 
-    if (numberOfMel === 1) {
-      arr.push([finalMelody, 1, transFormFn]);
-      return arr;
-    } else if (numberOfMel === 2) {
-      arr.push([finalMelody, 1, transFormFn]);
-      arr.push([finalMelody2, 2, transFormFn]);
-      return arr;
-    } else if (numberOfMel === 3) {
-      arr.push([finalMelody, 1, transFormFn]);
-      arr.push([finalMelody2, 2, transFormFn]);
-      arr.push([finalMelody3, 3, transFormFn]);
-      return arr;
-    } else if (numberOfMel === 4) {
-      arr.push([finalMelody, 1, transFormFn]);
-      arr.push([finalMelody2, 2, transFormFn]);
-      arr.push([finalMelody3, 3, transFormFn]);
-      arr.push([finalMelody4, 4, transFormFn]);
-      return arr;
+  const handleChangeMode = (newMode) => {
+    setIsStopped(true);
+
+    switch (newMode) {
+      case 'free':
+        setMode('free');
+        setMax(MAX_LENGTH);
+        break;
+      case 'listen':
+        setMode('listen');
+        const [daSong, theMax] = loadSong();
+        setTheSong(daSong);
+        setMax(theMax);
+        break;
+      case 'rec':
+        setMode('rec');
+        resetSong();
+        setMax(MAX_LENGTH);
+        break;
+      default:
+        return;
     }
 
-    return arr;
+    doPlay();
   }
 
-  const melodies = getMelodies(numberOfMel);
+  const saveSong = (s, daMax) => {
+    localStorage.setItem('song', JSON.stringify([s, daMax]));
+  }
 
-  const handleChangeOct = (v) => setOct(v);
+  const loadSong = () => {
+    const str = localStorage.getItem('song');
+    const [loadedSong, theMax] = JSON.parse(str);
+    return [loadedSong, theMax];
+  }
+
+  const resetSong = () => {
+    localStorage.removeItem('song');
+  }
+
+  const getModeText = (m) => {
+    switch (m) {
+      case 'free': return ' ';
+      case 'rec': return 'Recording...';
+      case 'listen': return 'Listening to song'
+      default: return '';
+    }
+  }
+
+  useEffect(() => {
+    console.log('tempoNum', tempoNum)
+    setTempo(getTempo(tempoNum));
+  }, [tempoNum]);
+
+  const getTempo = (t) => {
+    switch (t) {
+      case 1:
+        return 30.0
+      case 2:
+        return 90.0
+      case 3:
+        return 120.0
+      case 4:
+        return 180.0
+      default:
+        return;
+    }
+  }
 
   return <>
-    <>
-      <Metro
-        melodies={melodies}
-        audioContext={audioContext}
-        isStopped={isStopped}
-        tempo={tempo}
-        divider={divider}
-      />
-
+    <main>
       <div>
-        <button className={melody === 1 ? 'selected' : ''} selected onClick={() => handleChangeMelody(1)}></button>
-        <button className={melody === 2 ? 'selected' : ''} onClick={() => handleChangeMelody(2)}></button>
-        <button className={melody === 3 ? 'selected' : ''} onClick={() => handleChangeMelody(3)}></button>
-        <button className={melody === 4 ? 'selected' : ''} onClick={() => handleChangeMelody(4)}></button>
-      </div>
 
-      <div>
-        <button className={transNum === 1 ? 'selected' : ''} onClick={() => handleChangeTransformation(1)}></button>
-        <button className={transNum === 2 ? 'selected' : ''} onClick={() => handleChangeTransformation(2)}></button>
-        <button className={transNum === 3 ? 'selected' : ''} onClick={() => handleChangeTransformation(3)}></button>
-        <button className={transNum === 4 ? 'selected' : ''} onClick={() => handleChangeTransformation(4)}></button>
-      </div>
+        <h1 className="faint">{getModeText(mode)}</h1>
 
-      <div>
-        <button className={oct === 1 ? 'selected' : ''} onClick={() => handleChangeOct(1)}></button>
-        <button className={oct === 2 ? 'selected' : ''} onClick={() => handleChangeOct(2)}></button>
-        <button className={oct === 3 ? 'selected' : ''} onClick={() => handleChangeOct(3)}></button>
-        <button className={oct === 4 ? 'selected' : ''} onClick={() => handleChangeOct(4)}></button>
-      </div>
+        {/* <h3>{tempo} bpm</h3> */}
 
-      <div>
-        <button className={numberOfMel === 1 ? 'selected' : ''} onClick={() => setNumberOfMel(1)}></button>
-        <button className={numberOfMel === 2 ? 'selected' : ''} onClick={() => setNumberOfMel(2)}></button>
-        <button className={numberOfMel === 3 ? 'selected' : ''} onClick={() => setNumberOfMel(3)}></button>
-        <button className={numberOfMel === 4 ? 'selected' : ''} onClick={() => setNumberOfMel(4)}></button>
-      </div>
+        <MidiPlayer
+          melodies={voices}
+          audioContext={audioContext}
+          isStopped={isStopped}
+          tempo={tempo}
+          onUpdateCounter={handleUpdateCounter}
+        />
 
-      <button onClick={handleStop}>STOP</button>
-    </>
+        <Pads
+          melody={melodyNumber}
+          transNum={transNum}
+          oct={oct}
+          numberOfMel={numberOfVoices}
+          onChangeMelody={setMelodyNumber}
+          onChangeTransformation={setTransNum}
+          onChangeOct={setOct}
+          onChangeNumberOfMel={setNumberOfVoices}
+          onChangeTempo={setTempoNum}
+          tempoNum={tempoNum}
+        />
+
+        <div style={{ height: '100px' }}></div>
+
+        {isStopped &&
+          <div>
+            <button onClick={() => handleChangeMode('free')} className={'button2 ' + (mode === 'free' ? 'button2-selected' : '')}>EXPLORE</button>
+            <button onClick={() => handleChangeMode('rec')} className={'button2 ' + (mode === 'rec' ? 'button2-selected' : '')}>REC</button>
+            <button onClick={() => handleChangeMode('listen')} className={'button2 ' + (mode === 'listen' ? 'button2-selected' : '')}>LISTEN</button>
+          </div>}
+
+        <div>
+          {!isStopped && <button onClick={handleStop} className="button2">STOP</button>}
+        </div>
+      </div>
+    </main>
   </>
 }
 
