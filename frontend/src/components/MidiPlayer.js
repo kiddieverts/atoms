@@ -6,6 +6,7 @@ let nextTick = 0.0;
 let theMelodies = [];
 let globalCnt = 0;
 let megaGlobalCount = -1;
+let globalTempo = 120.0;
 
 const reset = () => {
   globalCnt = 0;
@@ -20,18 +21,22 @@ const MidiPlayer = ({ isStopped, audioContext, tempo, onUpdateCounter, melodies 
   useEffect(() => {
     theMelodies = melodies;
     // Reset counter whenever a new melody is received
-    globalCnt = 0;
+    // globalCnt = 0;
   }, [melodies]);
+
+  useEffect(() => {
+    globalTempo = tempo;
+  }, [tempo]);
 
   const scheduler = () => {
     // while there are notes that will need to play before the next interval,
     // schedule them and advance the pointer.
 
     const scheduleAheadTime = 0.1; // How far ahead to schedule audio (sec)
-    const lookahead = 25.0; // How frequently to call scheduling function (in milliseconds)
+    const lookahead = 75.0; // How frequently to call scheduling function (in milliseconds)
 
     while (nextTick < audioContext.currentTime + scheduleAheadTime) {
-      getNextTick(tempo);
+      getNextTick(globalTempo);
 
       onBang(nextTick, theMelodies, playFn);
       onUpdateCounter(megaGlobalCount);
