@@ -1,4 +1,5 @@
-import { MelodySingleTransformation } from '../types';
+import { MelodySingleTransformation, MelodyTransformation } from '../types';
+import { plugFn } from '../utils/helpers';
 import { unpack, pack } from '../utils/packing';
 
 const SCALE = [0, 2, 4, 5, 7, 9, 11];
@@ -167,3 +168,9 @@ const _makeCompact = (melody) => {
   }
   return arr;
 }
+
+
+export const doRetrograde = (m: MelodyTransformation): MelodyTransformation => plugFn(m, retrograde);
+export const doEightNotesTwoAndSixUpOctave = (m: MelodyTransformation): MelodyTransformation => plugFn(m, eightNotesTwoAndSixUpOctave);
+export const doUpDiatonicThird = (m: MelodyTransformation): MelodyTransformation => plugFn(m, upDiatonicThird);
+export const doRetrogradeEveryOther = (m: MelodyTransformation): MelodyTransformation => plugFn(m, retrogradeEveryOther);

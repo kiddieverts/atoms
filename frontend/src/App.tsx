@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 
 import { combineMelodies } from './utils/combineMelodies';
 import { generateVoiceB, generateVoiceC, generateVoiceD } from './music/melody-generator';
-import { getMelody } from './music/melody-picker';
+// import { getMelody } from './music/melody-picker';
 // import { transformAndPack, transpose } from './music/melody-transform';
 import MidiPlayer from './components/MidiPlayer';
 import Pads from './components/Pads';
-import { makeVoices, patch } from './_';
+// import { makeVoices, patch } from './_';
 import { ColNum, Scale } from './types';
+import { makeVoices } from './utils/helpers';
+import { patch } from './patch';
 
 const MAX_LENGTH = 1000000000;
 
@@ -41,11 +43,8 @@ const App = () => {
     const x = makeVoices(melodyNumber, transNum, oct, numberOfVoices, tempoNum, patch, scale);
     const [voices, sc, t] = x;
 
-    console.log('bang', x);
-    console.log('voices', voices)
-
     setVoices(combineMelodies(voices));
-    setTempo(120.0);
+    setTempo(t);
   }, [melodyNumber, transNum, oct, numberOfVoices, tempoNum]);
 
   const handleStop = () => {

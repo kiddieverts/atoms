@@ -1,4 +1,5 @@
-import { MelodyNote } from '../types';
+import { MelodyNote, MelodyTransformation } from '../types';
+import { makeMelody } from '../utils/helpers';
 
 export const melodyA: MelodyNote[] = [
   [69, 4], // a1
@@ -61,7 +62,12 @@ export const melodyD: MelodyNote[] = [
   [null, 8], // silence
 ];
 
-export const getMelody = (numb) => {
-  var melodies = [melodyA, melodyB, melodyC, melodyD];
-  return melodies[numb - 1].map(([a, b]) => [a - 12 - 12 - 12, b])
-}
+// export const getMelody = (numb) => {
+//   var melodies = [melodyA, melodyB, melodyC, melodyD];
+//   return melodies[numb - 1].map(([a, b]) => [a - 12 - 12 - 12, b])
+// }
+
+export const getMelody1 = (m: MelodyTransformation) => makeMelody(m, melodyA);
+export const getMelody2 = (m: MelodyTransformation) => makeMelody(m, melodyB);
+export const getMelody3 = (m: MelodyTransformation) => makeMelody(m, melodyC);
+export const getMelody4 = (m: MelodyTransformation) => makeMelody(m, melodyD);

@@ -75,8 +75,6 @@ const onBang = (nextTick, melodies, playFn) => {
     globalCnt = 0;
   }
 
-  console.log('MEEE', melodies, globalCnt)
-
   const tick = melodies[globalCnt];
 
   for (let [p, r] of tick) {
