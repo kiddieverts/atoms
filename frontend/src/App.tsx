@@ -4,22 +4,24 @@ import React, { useState, useEffect } from 'react';
 import { combineMelodies } from './utils/combineMelodies';
 import { generateVoiceB, generateVoiceC, generateVoiceD } from './music/melody-generator';
 import { getMelody } from './music/melody-picker';
-import { transformAndPack, transpose } from './music/melody-transform';
+// import { transformAndPack, transpose } from './music/melody-transform';
 import MidiPlayer from './components/MidiPlayer';
 import Pads from './components/Pads';
+import { makeVoices, patch } from './_';
+import { ColNum, Scale } from './types';
 
 const MAX_LENGTH = 1000000000;
 
 const App = () => {
   const audioContext = new AudioContext();
 
-  const [melodyNumber, setMelodyNumber] = useState(1);
-  const [transNum, setTransNum] = useState(2);
-  const [oct, setOct] = useState(3);
-  const [numberOfVoices, setNumberOfVoices] = useState(4);
+  const [melodyNumber, setMelodyNumber] = useState<ColNum>(1);
+  const [transNum, setTransNum] = useState<ColNum>(2);
+  const [oct, setOct] = useState<ColNum>(3);
+  const [numberOfVoices, setNumberOfVoices] = useState<ColNum>(4);
   const [voices, setVoices] = useState([]);
 
-  const [tempoNum, setTempoNum] = useState(2);
+  const [tempoNum, setTempoNum] = useState<ColNum>(2);
   const [max, setMax] = useState(MAX_LENGTH);
   const [isStopped, setIsStopped] = useState(true);
   const [mode, setMode] = useState('');
@@ -28,12 +30,22 @@ const App = () => {
   const [tempo, setTempo] = useState(120.0);
 
   useEffect(() => {
-    const voiceA = transpose(oct, transformAndPack(transNum, getMelody(melodyNumber)));
-    const voiceB = generateVoiceB(voiceA);
-    const voiceC = generateVoiceC(voiceA);
-    const voiceD = generateVoiceD(voiceA);
+    // const voiceA = transpose(oct, transformAndPack(transNum, getMelody(melodyNumber)));
+    // const voiceB = generateVoiceB(voiceA);
+    // const voiceC = generateVoiceC(voiceA);
+    // const voiceD = generateVoiceD(voiceA);
+    // setVoices(generateMelodies(voiceA, voiceB, voiceC, voiceD));
 
-    setVoices(generateMelodies(voiceA, voiceB, voiceC, voiceD));
+    const scale: Scale = ['C', 'D', 'E', 'F#', 'G', 'A', 'B'];
+
+    const x = makeVoices(melodyNumber, transNum, oct, numberOfVoices, tempoNum, patch, scale);
+    const [voices, sc, t] = x;
+
+    console.log('bang', x);
+    console.log('voices', voices)
+
+    setVoices(combineMelodies(voices));
+    setTempo(120.0);
   }, [melodyNumber, transNum, oct, numberOfVoices, tempoNum]);
 
   const handleStop = () => {
@@ -48,10 +60,10 @@ const App = () => {
     }
   }
 
-  const generateMelodies = (voiceA, voiceB, voiceC, voiceD) => {
-    const all = [voiceA, voiceB, voiceC, voiceD];
-    return combineMelodies(all.slice(0, numberOfVoices));
-  }
+  // const generateMelodies = (voiceA, voiceB, voiceC, voiceD) => {
+  //   const all = [voiceA, voiceB, voiceC, voiceD];
+  //   return combineMelodies(all.slice(0, numberOfVoices));
+  // }
 
   useEffect(() => {
     if (mode === 'rec') {
@@ -146,25 +158,25 @@ const App = () => {
     }
   }
 
-  useEffect(() => {
-    console.log('tempoNum', tempoNum)
-    setTempo(getTempo(tempoNum));
-  }, [tempoNum]);
+  // useEffect(() => {
+  //   console.log('tempoNum', tempoNum)
+  //   setTempo(getTempo(tempoNum));
+  // }, [tempoNum]);
 
-  const getTempo = (t) => {
-    switch (t) {
-      case 1:
-        return 30.0
-      case 2:
-        return 90.0
-      case 3:
-        return 120.0
-      case 4:
-        return 180.0
-      default:
-        return;
-    }
-  }
+  // const getTempo = (t) => {
+  //   switch (t) {
+  //     case 1:
+  //       return 30.0
+  //     case 2:
+  //       return 90.0
+  //     case 3:
+  //       return 120.0
+  //     case 4:
+  //       return 180.0
+  //     default:
+  //       return;
+  //   }
+  // }
 
   return <>
     <main>

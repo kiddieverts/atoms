@@ -1,58 +1,59 @@
+import { MelodySingleTransformation } from '../types';
 import { unpack, pack } from '../utils/packing';
 
 const SCALE = [0, 2, 4, 5, 7, 9, 11];
 
-export const transpose = (val, melody) => {
-  const [p, r] = unpack(melody);
-  switch (val) {
-    case 1:
-      return pack(p.map(pp => pp - 12), r);
-    case 2:
-      return pack(p.map(pp => pp + 0), r);
-    case 3:
-      return pack(p.map(pp => pp + 12), r);
-    case 4:
-      return pack(p.map(pp => pp + 24), r);
-    default:
-      return pack(p, r);
-  }
-}
+// export const transpose = (val, melody) => {
+//   const [p, r] = unpack(melody);
+//   switch (val) {
+//     case 1:
+//       return pack(p.map(pp => pp - 12), r);
+//     case 2:
+//       return pack(p.map(pp => pp + 0), r);
+//     case 3:
+//       return pack(p.map(pp => pp + 12), r);
+//     case 4:
+//       return pack(p.map(pp => pp + 24), r);
+//     default:
+//       return pack(p, r);
+//   }
+// }
 
-export const transformAndPack = (transNum, melody) => {
-  const [p, r] = _transform(transNum, melody);
-  return pack(p, r);
-}
+// export const transformAndPack = (transNum, melody) => {
+//   const [p, r] = _transform(transNum, melody);
+//   return pack(p, r);
+// }
 
-const _transform = (transNum, melody) => {
-  const m = melody;
-  const u = unpack(m);
-  const p = u[0];
-  const r = u[1];
+// const _transform = (transNum, melody) => {
+//   const m = melody;
+//   const u = unpack(m);
+//   const p = u[0];
+//   const r = u[1];
 
-  switch (transNum) {
-    case 1:
-      return retrograde(p, r);
-    case 2:
-      return eightNotesTwoAndSixUpOctave(p, r);
-    case 3:
-      return upDiatonicThird(p, r);
-    case 4:
-      return retrogradeEveryOther(p, r);
-    default:
-      return [p, r];
-  }
-}
+//   switch (transNum) {
+//     case 1:
+//       return retrograde(p, r);
+//     case 2:
+//       return eightNotesTwoAndSixUpOctave(p, r);
+//     case 3:
+//       return upDiatonicThird(p, r);
+//     case 4:
+//       return retrogradeEveryOther(p, r);
+//     default:
+//       return [p, r];
+//   }
+// }
 
 /* Retrograde */
 
-const retrograde = (pitches, rhythm) => {
+export const retrograde: MelodySingleTransformation = (pitches, rhythm) => {
   const p = pack(pitches, rhythm);
   return unpack(p.reverse());
 }
 
 /* Eight notes two and six up are up an octave */
 
-const eightNotesTwoAndSixUpOctave = (pitches, rhythm) => {
+export const eightNotesTwoAndSixUpOctave: MelodySingleTransformation = (pitches, rhythm) => {
   const melody = pack(pitches, rhythm);
 
   const m = _make32Steps(melody);
@@ -74,7 +75,7 @@ const eightNotesTwoAndSixUpOctave = (pitches, rhythm) => {
 
 /* Up a diatonic third */
 
-const upDiatonicThird = (pitches, rhythm) => {
+export const upDiatonicThird: MelodySingleTransformation = (pitches, rhythm) => {
   const arr = [];
   for (let i = 0; i <= pitches.length - 1; i++) {
     const pitch = _transposeDiatonicUp(pitches[i], SCALE, 2);
@@ -84,7 +85,7 @@ const upDiatonicThird = (pitches, rhythm) => {
   return unpack(arr);
 }
 
-const _transposeDiatonicUp = (note, scale, offset) => {
+const _transposeDiatonicUp = (note: number, scale: number[], offset: number): number => {
   if (note === null) return null;
 
   let p = note;
@@ -101,7 +102,7 @@ const _transposeDiatonicUp = (note, scale, offset) => {
 
 /* Retrograde flipped within the mesasure */
 
-const retrogradeEveryOther = (pitches, rhythm) => {
+export const retrogradeEveryOther: MelodySingleTransformation = (pitches, rhythm) => {
   const packed = pack(pitches, rhythm);
   const retrograde = packed.reverse();
   const m = _make32Steps(retrograde);

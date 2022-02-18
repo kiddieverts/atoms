@@ -6,7 +6,7 @@ const Pads = ({ melody, tempoNum, transNum, oct, numberOfMel, onChangeMelody, on
       <div className="cent">
         melody
       </div>
-      <div className={'tile ' + (melody === 1 ? 'selected' : '')} selected onClick={() => onChangeMelody(1)}></div>
+      <div className={'tile ' + (melody === 1 ? 'selected' : '')} onClick={() => onChangeMelody(1)}></div>
       <div className={'tile ' + (melody === 2 ? 'selected' : '')} onClick={() => onChangeMelody(2)}></div>
       <div className={'tile ' + (melody === 3 ? 'selected' : '')} onClick={() => onChangeMelody(3)}></div>
       <div className={'tile ' + (melody === 4 ? 'selected' : '')} onClick={() => onChangeMelody(4)}></div>

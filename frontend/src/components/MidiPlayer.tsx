@@ -64,7 +64,7 @@ const MidiPlayer = ({ isStopped, audioContext, tempo, onUpdateCounter, melodies 
   </>
 };
 
-const getNextTick = (tempo, div) => {
+const getNextTick = (tempo) => {
   const interval = 60.0 / tempo / 4.0;
   nextTick += interval;
 }
@@ -74,6 +74,8 @@ const onBang = (nextTick, melodies, playFn) => {
   if (globalCnt >= TOTAL_NUMBER_OF_TICKS) {
     globalCnt = 0;
   }
+
+  console.log('MEEE', melodies, globalCnt)
 
   const tick = melodies[globalCnt];
 

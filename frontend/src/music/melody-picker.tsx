@@ -1,4 +1,6 @@
-const melodyA = [
+import { MelodyNote } from '../types';
+
+export const melodyA: MelodyNote[] = [
   [69, 4], // a1
   [64, 4], // e1
   [69, 4], // a1
@@ -15,7 +17,7 @@ const melodyA = [
   [74, 4] // d1
 ];
 
-const melodyB = [
+export const melodyB: MelodyNote[] = [
   [null, 4], // silence
   [72, 4], // c2
   [77, 4], // f2 
@@ -31,7 +33,7 @@ const melodyB = [
   [76, 8], // e2
 ];
 
-const melodyC = [
+export const melodyC: MelodyNote[] = [
   [null, 8], // silence
   [81, 12], // a2
   [72, 4], // c2
@@ -42,7 +44,7 @@ const melodyC = [
   [76, 8] // e2
 ];
 
-const melodyD = [
+export const melodyD: MelodyNote[] = [
   [60, 8], // c1
   [null, 8], // silence
   [60, 1], // c1
