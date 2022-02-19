@@ -2,15 +2,11 @@
 import React, { useState, useEffect } from 'react';
 
 import { combineMelodies } from './utils/combineMelodies';
-import { generateVoiceB, generateVoiceC, generateVoiceD } from './music/melody-generator';
-// import { getMelody } from './music/melody-picker';
-// import { transformAndPack, transpose } from './music/melody-transform';
 import MidiPlayer from './components/MidiPlayer';
 import Pads from './components/Pads';
-// import { makeVoices, patch } from './_';
 import { ColNum, Scale } from './types';
-import { makeVoices } from './utils/helpers';
-import { patch } from './patch';
+import { runPatch } from './utils/helpers';
+import { patch } from './music/patch';
 
 const MAX_LENGTH = 1000000000;
 
@@ -32,16 +28,10 @@ const App = () => {
   const [tempo, setTempo] = useState(120.0);
 
   useEffect(() => {
-    // const voiceA = transpose(oct, transformAndPack(transNum, getMelody(melodyNumber)));
-    // const voiceB = generateVoiceB(voiceA);
-    // const voiceC = generateVoiceC(voiceA);
-    // const voiceD = generateVoiceD(voiceA);
-    // setVoices(generateMelodies(voiceA, voiceB, voiceC, voiceD));
-
     const scale: Scale = ['C', 'D', 'E', 'F#', 'G', 'A', 'B'];
 
-    const x = makeVoices(melodyNumber, transNum, oct, numberOfVoices, tempoNum, patch, scale);
-    const [voices, sc, t] = x;
+    const result = runPatch(melodyNumber, transNum, oct, numberOfVoices, tempoNum, patch, scale);
+    const [voices, sc, t] = result;
 
     setVoices(combineMelodies(voices));
     setTempo(t);
@@ -58,11 +48,6 @@ const App = () => {
       setMode('');
     }
   }
-
-  // const generateMelodies = (voiceA, voiceB, voiceC, voiceD) => {
-  //   const all = [voiceA, voiceB, voiceC, voiceD];
-  //   return combineMelodies(all.slice(0, numberOfVoices));
-  // }
 
   useEffect(() => {
     if (mode === 'rec') {
@@ -157,33 +142,11 @@ const App = () => {
     }
   }
 
-  // useEffect(() => {
-  //   console.log('tempoNum', tempoNum)
-  //   setTempo(getTempo(tempoNum));
-  // }, [tempoNum]);
-
-  // const getTempo = (t) => {
-  //   switch (t) {
-  //     case 1:
-  //       return 30.0
-  //     case 2:
-  //       return 90.0
-  //     case 3:
-  //       return 120.0
-  //     case 4:
-  //       return 180.0
-  //     default:
-  //       return;
-  //   }
-  // }
-
   return <>
     <main>
       <div>
 
         <h1 className="faint">{getModeText(mode)}</h1>
-
-        {/* <h3>{tempo} bpm</h3> */}
 
         <MidiPlayer
           melodies={voices}

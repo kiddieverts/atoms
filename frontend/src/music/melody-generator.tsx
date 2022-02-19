@@ -1,4 +1,4 @@
-import { Melody, MelodyNote, Pitch, Duration } from "../types";
+import { Melody, MelodyNote, Pitch, NoteLength } from "../types";
 
 export type VoiceGenerator = (melo: Melody) => Melody;
 
@@ -21,7 +21,7 @@ export const generateVoiceD: VoiceGenerator = (melody) =>
         ? p
         : p - 5 as Pitch);
 
-      const rr: Duration = (r === 4 || r === 2)
+      const rr: NoteLength = (r === 4 || r === 2)
         ? 1
         : 2;
 

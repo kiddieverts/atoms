@@ -4,47 +4,6 @@ import { unpack, pack } from '../utils/packing';
 
 const SCALE = [0, 2, 4, 5, 7, 9, 11];
 
-// export const transpose = (val, melody) => {
-//   const [p, r] = unpack(melody);
-//   switch (val) {
-//     case 1:
-//       return pack(p.map(pp => pp - 12), r);
-//     case 2:
-//       return pack(p.map(pp => pp + 0), r);
-//     case 3:
-//       return pack(p.map(pp => pp + 12), r);
-//     case 4:
-//       return pack(p.map(pp => pp + 24), r);
-//     default:
-//       return pack(p, r);
-//   }
-// }
-
-// export const transformAndPack = (transNum, melody) => {
-//   const [p, r] = _transform(transNum, melody);
-//   return pack(p, r);
-// }
-
-// const _transform = (transNum, melody) => {
-//   const m = melody;
-//   const u = unpack(m);
-//   const p = u[0];
-//   const r = u[1];
-
-//   switch (transNum) {
-//     case 1:
-//       return retrograde(p, r);
-//     case 2:
-//       return eightNotesTwoAndSixUpOctave(p, r);
-//     case 3:
-//       return upDiatonicThird(p, r);
-//     case 4:
-//       return retrogradeEveryOther(p, r);
-//     default:
-//       return [p, r];
-//   }
-// }
-
 /* Retrograde */
 
 export const retrograde: MelodySingleTransformation = (pitches, rhythm) => {
@@ -168,7 +127,6 @@ const _makeCompact = (melody) => {
   }
   return arr;
 }
-
 
 export const doRetrograde = (m: MelodyTransformation): MelodyTransformation => plugFn(m, retrograde);
 export const doEightNotesTwoAndSixUpOctave = (m: MelodyTransformation): MelodyTransformation => plugFn(m, eightNotesTwoAndSixUpOctave);
