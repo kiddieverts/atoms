@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 
-import { ColNum, Melodies } from './types';
+import { Melodies, PadState } from './types';
 import { combineMelodies } from './utils/combineMelodies';
 import { patch, scale } from './music/0_patch';
 import { runPatch } from './utils/helpers';
@@ -9,35 +9,51 @@ import MidiPlayer from './components/MidiPlayer';
 import Pads from './components/Pads';
 
 const MAX_LENGTH = 1000000000;
+const DEFAULT_STATE: PadState = {
+  1: 1,
+  2: 1,
+  3: 1,
+  4: 1,
+  5: 1
+}
+const DEFAULT_TEMPO = 120.0;
+
+type Song = { [key: string]: PadState }
+type Mode = 'free' | 'rec' | 'listen' | '';
 
 const App = () => {
   const audioContext = new AudioContext();
-
-  const [melodyNumber, setMelodyNumber] = useState<ColNum>(1);
-  const [transNum, setTransNum] = useState<ColNum>(2);
-  const [oct, setOct] = useState<ColNum>(3);
-  const [numberOfVoices, setNumberOfVoices] = useState<ColNum>(4);
-  const [tempoNum, setTempoNum] = useState<ColNum>(2);
-
   const [voices, setVoices] = useState<Melodies>([]);
   const [max, setMax] = useState(MAX_LENGTH);
   const [isStopped, setIsStopped] = useState(true);
-  const [mode, setMode] = useState<'free' | 'rec' | 'listen' | ''>('');
+  const [mode, setMode] = useState<Mode>('');
   const [theCnt, setTheCnt] = useState(0);
-  const [theSong, setTheSong] = useState({});
-  const [tempo, setTempo] = useState(120.0);
+  const [theSong, setTheSong] = useState<Song>({});
+  const [tempo, setTempo] = useState(DEFAULT_TEMPO);
+  const [state, setState] = useState<PadState>(DEFAULT_STATE);
+
+  const stateToObj = (s: PadState) => {
+    return {
+      melodyNumber: s[1],
+      transNum: s[2],
+      oct: s[3],
+      numberOfVoices: s[4],
+      tempoNum: s[5]
+    }
+  }
 
   useEffect(() => {
+    const { melodyNumber, transNum, oct, numberOfVoices, tempoNum } = stateToObj(state);
     const result = runPatch(melodyNumber, transNum, oct, numberOfVoices, tempoNum, patch, scale);
-    const { melodies: voices, tempo: t } = result;
+    const { melodies, tempo: t } = result;
 
-    setVoices(combineMelodies(voices));
+    setVoices(combineMelodies(melodies));
     setTempo(t);
 
     if (mode === 'rec') {
       addStep();
     }
-  }, [melodyNumber, transNum, oct, numberOfVoices, tempoNum]);
+  }, [state]);
 
   useEffect(() => {
     if (!isStopped && mode === 'rec' && Object.keys(theSong).length === 0) {
@@ -46,8 +62,7 @@ const App = () => {
   }, [isStopped]);
 
   const addStep = () => {
-    const preset = [melodyNumber, transNum, oct, numberOfVoices, tempoNum];
-    setTheSong(old => ({ ...old, [theCnt]: preset }));
+    setTheSong(old => ({ ...old, [theCnt]: state }));
   }
 
   const handleUpdateCounter = (cnt) => {
@@ -62,16 +77,11 @@ const App = () => {
       if (!u) {
         return;
       }
-      if (u.length === 0) {
-        handleStop();
-        return;
-      }
-      const [mn, tn, oc, nv, tp] = u;
-      setMelodyNumber(mn);
-      setTransNum(tn);
-      setOct(oc);
-      setNumberOfVoices(nv);
-      setTempoNum(tp);
+      // if (u.length === 0) {
+      //   handleStop();
+      //   return;
+      // }
+      setState(u);
     }
   }
 
@@ -129,6 +139,10 @@ const App = () => {
     localStorage.removeItem('song');
   }
 
+  const handlePadUpdate = (rowIndex: number, colIndex: number) => {
+    setState(old => ({ ...old, [rowIndex]: colIndex }))
+  }
+
   return <>
     <main>
       <div>
@@ -143,22 +157,16 @@ const App = () => {
         />
 
         <Pads
-          melody={melodyNumber}
-          transNum={transNum}
-          oct={oct}
-          numberOfMel={numberOfVoices}
-          onChangeMelody={setMelodyNumber}
-          onChangeTransformation={setTransNum}
-          onChangeOct={setOct}
-          onChangeNumberOfMel={setNumberOfVoices}
-          onChangeTempo={setTempoNum}
-          tempoNum={tempoNum}
+          state={state}
+          labels={{ 1: 'melody', 2: 'transformation', 3: 'octave', 4: 'density', 5: 'tempo' }}
+          cols={4}
+          onUpdate={handlePadUpdate}
         />
 
         <div style={{ height: '100px' }}></div>
 
         {isStopped &&
-          <Buttons mode={mode} handleChangeMode={handleChangeMode} />}
+          <ModeButtons mode={mode} handleChangeMode={handleChangeMode} />}
 
         <div>
           {!isStopped && <button onClick={handleStop} className="button2">STOP</button>}
@@ -180,7 +188,7 @@ const Status = ({ mode }) => {
   return <h1 className="faint">{getModeText(mode)}</h1>
 }
 
-const Buttons = ({ handleChangeMode, mode }) => {
+const ModeButtons = ({ handleChangeMode, mode }) => {
   return <div>
     <button onClick={() => handleChangeMode('free')} className={'button2 ' + (mode === 'free' ? 'button2-selected' : '')}>EXPLORE</button>
     <button onClick={() => handleChangeMode('rec')} className={'button2 ' + (mode === 'rec' ? 'button2-selected' : '')}>REC</button>
