@@ -18,8 +18,18 @@ const DEFAULT_STATE: PadState = {
 }
 const DEFAULT_TEMPO = 120.0;
 
+const stateToObj = (s: PadState) => {
+  return {
+    melodyNumber: s[1],
+    transNum: s[2],
+    oct: s[3],
+    numberOfVoices: s[4],
+    tempoNum: s[5]
+  }
+}
+
 type Song = { [key: string]: PadState }
-type Mode = 'free' | 'rec' | 'listen' | '';
+type Mode = 'EXPLORE' | 'REC' | 'LISTEN' | '';
 
 const App = () => {
   const audioContext = new AudioContext();
@@ -27,20 +37,10 @@ const App = () => {
   const [max, setMax] = useState(MAX_LENGTH);
   const [isStopped, setIsStopped] = useState(true);
   const [mode, setMode] = useState<Mode>('');
-  const [theCnt, setTheCnt] = useState(0);
-  const [theSong, setTheSong] = useState<Song>({});
+  const [globalCounter, setGlobalCounter] = useState(0);
+  const [song, setSong] = useState<Song>({});
   const [tempo, setTempo] = useState(DEFAULT_TEMPO);
   const [state, setState] = useState<PadState>(DEFAULT_STATE);
-
-  const stateToObj = (s: PadState) => {
-    return {
-      melodyNumber: s[1],
-      transNum: s[2],
-      oct: s[3],
-      numberOfVoices: s[4],
-      tempoNum: s[5]
-    }
-  }
 
   useEffect(() => {
     const { melodyNumber, transNum, oct, numberOfVoices, tempoNum } = stateToObj(state);
@@ -50,71 +50,68 @@ const App = () => {
     setVoices(combineMelodies(melodies));
     setTempo(t);
 
-    if (mode === 'rec') {
+    if (mode === 'REC') {
       addStep();
     }
   }, [state]);
 
   useEffect(() => {
-    if (!isStopped && mode === 'rec' && Object.keys(theSong).length === 0) {
+    if (!isStopped && mode === 'REC' && Object.keys(song).length === 0) {
       addStep();
     }
   }, [isStopped]);
 
-  const addStep = () => {
-    setTheSong(old => ({ ...old, [theCnt]: state }));
-  }
+  const addStep = () => setSong(old => ({ ...old, [globalCounter]: state }));
 
   const handleUpdateCounter = (cnt) => {
     if (cnt > max) {
       handleStop();
       throw new Error(''); // Forces playback to stop. TODO: Find a better solution
     }
-    setTheCnt(cnt);
+    setGlobalCounter(cnt);
 
-    if (mode === 'listen') {
-      const u = theSong[cnt + 1];
-      if (!u) {
+    if (mode === 'LISTEN') {
+      const newState = song[cnt + 1];
+      if (!newState) {
         return;
       }
       // if (u.length === 0) {
       //   handleStop();
       //   return;
       // }
-      setState(u);
+      setState(newState);
     }
   }
 
   const handleStop = () => {
     setIsStopped(true);
     setMode('');
-    if (mode === 'rec') {
-      const s = theSong;
-      setMax(theCnt);
-      saveSong(s, theCnt);
-      setTheSong({});
+    if (mode === 'REC') {
+      setMax(globalCounter);
+      saveSong(song, globalCounter);
+      setSong({});
       setMode('');
     }
   }
 
   const doPlay = () => setIsStopped(false);
 
-  const handleChangeMode = (newMode) => {
+  const handleChangeMode = (newMode: Mode) => {
     setIsStopped(true);
 
     switch (newMode) {
-      case 'free':
-        setMode('free');
+      case 'EXPLORE':
+        setMode('EXPLORE');
         setMax(MAX_LENGTH);
         break;
-      case 'listen':
-        setMode('listen');
-        const [daSong, theMax] = loadSong();
-        setTheSong(daSong);
+      case 'LISTEN':
+        setMode('LISTEN');
+        const [sng, theMax] = loadSong();
+        setSong(sng);
         setMax(theMax);
         break;
-      case 'rec':
-        setMode('rec');
+      case 'REC':
+        setMode('REC');
         resetSong();
         setMax(MAX_LENGTH);
         break;
@@ -125,7 +122,7 @@ const App = () => {
     doPlay();
   }
 
-  const saveSong = (s, daMax) => {
+  const saveSong = (s: Song, daMax: number) => {
     localStorage.setItem('song', JSON.stringify([s, daMax]));
   }
 
@@ -166,21 +163,27 @@ const App = () => {
         <div style={{ height: '100px' }}></div>
 
         {isStopped &&
-          <ModeButtons mode={mode} handleChangeMode={handleChangeMode} />}
+          <ModeButtons
+            mode={mode}
+            onChangeMode={handleChangeMode}
+          />}
 
         <div>
-          {!isStopped && <button onClick={handleStop} className="button2">STOP</button>}
+          {!isStopped && <button
+            onClick={handleStop}
+            className="button2"
+          >STOP</button>}
         </div>
       </div>
     </main>
   </>
 }
 
-const Status = ({ mode }) => {
+const Status = ({ mode }: { mode: Mode }) => {
   const getModeText = (m) => {
     switch (m) {
-      case 'rec': return 'Recording...';
-      case 'listen': return 'Listening to song'
+      case 'REC': return 'Recording...';
+      case 'LISTEN': return 'Listening to song'
       default: return '';
     }
   }
@@ -188,11 +191,16 @@ const Status = ({ mode }) => {
   return <h1 className="faint">{getModeText(mode)}</h1>
 }
 
-const ModeButtons = ({ handleChangeMode, mode }) => {
+type ModeButtonsProps = {
+  mode: Mode;
+  onChangeMode: (mode: Mode) => void;
+}
+
+const ModeButtons = ({ onChangeMode, mode }: ModeButtonsProps) => {
   return <div>
-    <button onClick={() => handleChangeMode('free')} className={'button2 ' + (mode === 'free' ? 'button2-selected' : '')}>EXPLORE</button>
-    <button onClick={() => handleChangeMode('rec')} className={'button2 ' + (mode === 'rec' ? 'button2-selected' : '')}>REC</button>
-    <button onClick={() => handleChangeMode('listen')} className={'button2 ' + (mode === 'listen' ? 'button2-selected' : '')}>LISTEN</button>
+    <button onClick={() => onChangeMode('EXPLORE')} className={'button2 ' + (mode === 'EXPLORE' ? 'button2-selected' : '')}>EXPLORE</button>
+    <button onClick={() => onChangeMode('REC')} className={'button2 ' + (mode === 'REC' ? 'button2-selected' : '')}>REC</button>
+    <button onClick={() => onChangeMode('LISTEN')} className={'button2 ' + (mode === 'LISTEN' ? 'button2-selected' : '')}>LISTEN</button>
   </div>
 }
 
