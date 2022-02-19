@@ -1,9 +1,9 @@
-import { doRetrograde, doEightNotesTwoAndSixUpOctave, doUpDiatonicThird, doRetrogradeEveryOther } from './melody-transform'
-import { doVoiceB, doVoiceC, doVoiceD } from './voices';
-import { getMelodyA, getMelodyB, getMelodyC, getMelodyD } from './melody-picker';
+import { doRetrograde, doEightNotesTwoAndSixUpOctave, doUpDiatonicThird, doRetrogradeEveryOther } from './2_melody-transform'
+import { doVoiceB, doVoiceC, doVoiceD } from './5_voices';
+import { getMelodyA, getMelodyB, getMelodyC, getMelodyD } from './1_melody-picker';
 import { MelodyTransformation, Patch, Scale } from '../types';
-import { tempo120, tempo180, tempo30, tempo60 } from './tempo-changes';
-import { transposeDownOneOctave, transposeUpOneOctave, transposeUpTwoOctaves } from './transpose';
+import { tempo120, tempo180, tempo30, tempo60 } from './4_tempo-changes';
+import { transposeDownOneOctave, transposeUpOneOctave, transposeUpTwoOctaves } from './3_transpose';
 
 const doNoting = (m: MelodyTransformation): MelodyTransformation => m;
 
