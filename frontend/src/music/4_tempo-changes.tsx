@@ -5,7 +5,6 @@ export const tempo60 = (m: MelodyTransformation) => changeTempo(m, 60.0);
 export const tempo120 = (m: MelodyTransformation) => changeTempo(m, 120.0);
 export const tempo180 = (m: MelodyTransformation) => changeTempo(m, 180.0);
 
-const changeTempo = (m: MelodyTransformation, tempo: number) => {
-  const { melodies, scale } = m;
+const changeTempo = ({ melodies, scale }: MelodyTransformation, tempo: number) => {
   return { melodies, scale, tempo };
 }

@@ -11,17 +11,19 @@ export type TransformationFunction = (m: MelodyTransformation) => MelodyTransfor
 export type UnpackedMelody = readonly [Pitch[], NoteLength[]];
 export type UnpackingFunction = (packedMelody: Melody) => UnpackedMelody;
 export type PackingFunction = (pitches: Pitch[], durations: NoteLength[]) => Melody;
-export type MelodySingleTransformation = (p: Pitch[], r: NoteLength[]) => UnpackedMelody;
+export type MelodySingleTransformation = (p: Melody, s: Scale) => Melody;
 export type MelodyTransFunc = (m: MelodyTransformation) => MelodyTransformation;
 export type ColNum = 1 | 2 | 3 | 4 | 5;
 export type VoiceGenerator = (melo: Melody) => Melody;
 
+export type StartFunction = (s: Scale, t: Tempo) => MelodyTransformation;
+
 export type Patch = {
   1: {
-    1: TransformationFunction;
-    2: TransformationFunction;
-    3: TransformationFunction;
-    4: TransformationFunction;
+    1: StartFunction;
+    2: StartFunction;
+    3: StartFunction;
+    4: StartFunction;
   };
   2: {
     1: TransformationFunction;

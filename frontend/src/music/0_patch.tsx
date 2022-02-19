@@ -1,20 +1,17 @@
 import { doRetrograde, doEightNotesTwoAndSixUpOctave, doUpDiatonicThird, doRetrogradeEveryOther } from './2_melody-transform'
-import { doVoiceB, doVoiceC, doVoiceD } from './5_voices';
+import { doVoiceB as calculateVoiceB, doVoiceC as calculateVoiceC, doVoiceD as calculateVoiceD } from './5_voices';
 import { getMelodyA, getMelodyB, getMelodyC, getMelodyD } from './1_melody-picker';
-import { MelodyTransformation, Patch, Scale } from '../types';
+import { Patch, Scale } from '../types';
 import { tempo120, tempo180, tempo30, tempo60 } from './4_tempo-changes';
 import { transposeDownOneOctave, transposeUpOneOctave, transposeUpTwoOctaves } from './3_transpose';
-
-const doNoting = (m: MelodyTransformation): MelodyTransformation => m;
-
-export const scale: Scale = ['C', 'D', 'E', 'F#', 'G', 'A', 'B'];
+import { doNothing } from '../utils/do-nothing';
 
 export const patch: Patch = {
   1: {
     1: getMelodyA,
     2: getMelodyB,
     3: getMelodyC,
-    4: getMelodyD
+    4: getMelodyD,
   },
   2: {
     1: doRetrograde,
@@ -24,15 +21,15 @@ export const patch: Patch = {
   },
   3: {
     1: transposeDownOneOctave,
-    2: doNoting,
+    2: doNothing,
     3: transposeUpOneOctave,
     4: transposeUpTwoOctaves
   },
   4: {
-    1: doNoting,
-    2: doVoiceB,
-    3: doVoiceC,
-    4: doVoiceD
+    1: doNothing,
+    2: calculateVoiceB,
+    3: calculateVoiceC,
+    4: calculateVoiceD
   },
   5: {
     1: tempo30,
@@ -41,3 +38,5 @@ export const patch: Patch = {
     4: tempo180,
   }
 }
+
+export const scale: Scale = ['C', 'D', 'E', 'F#', 'G', 'A', 'B'];

@@ -1,5 +1,4 @@
-import { MelodyNote, MelodyTransformation } from '../types';
-import { makeMelody } from '../utils/helpers';
+import { Melody, MelodyNote, Pitch, Scale, Tempo } from '../types';
 
 export const melodyA: MelodyNote[] = [
   [69, 4], // a1
@@ -62,7 +61,10 @@ export const melodyD: MelodyNote[] = [
   [null, 8], // silence
 ];
 
-export const getMelodyA = (m: MelodyTransformation) => makeMelody(m, melodyA);
-export const getMelodyB = (m: MelodyTransformation) => makeMelody(m, melodyB);
-export const getMelodyC = (m: MelodyTransformation) => makeMelody(m, melodyC);
-export const getMelodyD = (m: MelodyTransformation) => makeMelody(m, melodyD);
+export const getMelodyA = (scale: Scale, tempo: Tempo) => ({ melodies: [downThreeOctaves(melodyA)], scale, tempo });
+export const getMelodyB = (scale: Scale, tempo: Tempo) => ({ melodies: [downThreeOctaves(melodyB)], scale, tempo });
+export const getMelodyC = (scale: Scale, tempo: Tempo) => ({ melodies: [downThreeOctaves(melodyC)], scale, tempo });
+export const getMelodyD = (scale: Scale, tempo: Tempo) => ({ melodies: [downThreeOctaves(melodyD)], scale, tempo });
+
+const downThreeOctaves = (melody: Melody) =>
+  melody.map(([pitch, noteLength]) => ([pitch - 36 as Pitch, noteLength])) as Melody;

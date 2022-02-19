@@ -1,21 +1,12 @@
-import { MelodySingleTransformation, MelodyTransformation } from '../types';
-import { plugFn } from '../utils/helpers';
-import { unpack, pack } from '../utils/packing';
-
-const SCALE = [0, 2, 4, 5, 7, 9, 11];
+import { MelodySingleTransformation, MelodyTransformation, Pitch, Scale } from '../types';
+import { applyToAllVoices } from '../utils/helpers';
 
 /* Retrograde */
-
-export const retrograde: MelodySingleTransformation = (pitches, rhythm) => {
-  const p = pack(pitches, rhythm);
-  return unpack(p.reverse());
-}
+export const retrograde: MelodySingleTransformation = (m) => m.reverse();
 
 /* Eight notes two and six up are up an octave */
-
-export const eightNotesTwoAndSixUpOctave: MelodySingleTransformation = (pitches, rhythm) => {
-  const melody = pack(pitches, rhythm);
-
+export const eightNotesTwoAndSixUpOctave: MelodySingleTransformation = (melody) => {
+  // TODO: Make algo handle more than 2 bar loops.
   const m = _make32Steps(melody);
   const arr = [];
 
@@ -30,47 +21,62 @@ export const eightNotesTwoAndSixUpOctave: MelodySingleTransformation = (pitches,
     }
   }
 
-  return unpack(_makeCompact(arr));
+  return _makeCompact(arr);
 }
 
 /* Up a diatonic third */
-
-export const upDiatonicThird: MelodySingleTransformation = (pitches, rhythm) => {
-  const arr = [];
-  for (let i = 0; i <= pitches.length - 1; i++) {
-    const pitch = _transposeDiatonicUp(pitches[i], SCALE, 2);
-    const duration = rhythm[i];
-    arr.push([pitch, duration]);
-  }
-  return unpack(arr);
+export const upDiatonicThird: MelodySingleTransformation = (melody, scale) => {
+  return melody.map(([pitch, noteLength]) => {
+    const changedPitch = _transposeDiatonicUp(pitch, scale, 2);
+    return [changedPitch, noteLength];
+  });
 }
 
-const _transposeDiatonicUp = (note: number, scale: number[], offset: number): number => {
+const _noteNamesToNumbers = (scale: Scale) => {
+  const mapping = {
+    'C': 0,
+    'C#': 1,
+    'D': 2,
+    'D#': 3,
+    'E': 4,
+    'F': 5,
+    'F#': 6,
+    'G': 7,
+    'G#': 8,
+    'A': 9,
+    'A#': 10,
+    'B': 11
+  };
+
+  return scale.map(pitch => mapping[pitch]);
+}
+
+const _transposeDiatonicUp = (note: Pitch, scale: Scale, offset: number): Pitch => {
   if (note === null) return null;
+
+  const scaleNumbers = _noteNamesToNumbers(scale);
 
   let p = note;
   let octave = 0;
   while (p >= 12) {
     octave++;
-    p = p - 12;
+    p = p - 12 as Pitch;
   }
 
-  const i = scale.indexOf(p);
-  const combined = scale.concat(scale.map(function (num) { return num + 12; }));
-  return combined[i + offset] + (octave * 12);
+  const i = scaleNumbers.indexOf(p);
+  // const combined = scaleNumbers.concat(scaleNumbers.map(function (num) { return num + 12; }));
+  const combined = scaleNumbers.concat(scaleNumbers.map(num => num + 12));
+  return combined[i + offset] + (octave * 12) as Pitch;
 }
 
 /* Retrograde flipped within the mesasure */
-
-export const retrogradeEveryOther: MelodySingleTransformation = (pitches, rhythm) => {
-  const packed = pack(pitches, rhythm);
-  const retrograde = packed.reverse();
+export const retrogradeEveryOther: MelodySingleTransformation = (melody) => {
+  const retrograde = melody.reverse();
   const m = _make32Steps(retrograde);
   const arr = _collectIntoBeats(m);
   const shuffled = [arr[1], arr[0], arr[3], arr[2]];
   const comb = _combineIntoOneArray(shuffled);
-  const x = _makeCompact(comb);
-  return unpack(x);
+  return _makeCompact(comb);
 }
 
 const _combineIntoOneArray = (comb) => {
@@ -128,7 +134,8 @@ const _makeCompact = (melody) => {
   return arr;
 }
 
-export const doRetrograde = (m: MelodyTransformation): MelodyTransformation => plugFn(m, retrograde);
-export const doEightNotesTwoAndSixUpOctave = (m: MelodyTransformation): MelodyTransformation => plugFn(m, eightNotesTwoAndSixUpOctave);
-export const doUpDiatonicThird = (m: MelodyTransformation): MelodyTransformation => plugFn(m, upDiatonicThird);
-export const doRetrogradeEveryOther = (m: MelodyTransformation): MelodyTransformation => plugFn(m, retrogradeEveryOther);
+
+export const doRetrograde = (m: MelodyTransformation): MelodyTransformation => applyToAllVoices(m, retrograde);
+export const doEightNotesTwoAndSixUpOctave = (m: MelodyTransformation): MelodyTransformation => applyToAllVoices(m, eightNotesTwoAndSixUpOctave);
+export const doUpDiatonicThird = (m: MelodyTransformation): MelodyTransformation => applyToAllVoices(m, upDiatonicThird);
+export const doRetrogradeEveryOther = (m: MelodyTransformation): MelodyTransformation => applyToAllVoices(m, retrogradeEveryOther);
