@@ -1,4 +1,3 @@
-import { generateVoiceB, generateVoiceC, generateVoiceD } from '../music/melody-generator';
 import { MelodyTransformation, MelodyNote, Pitch, Melody, MelodySingleTransformation, ColNum, Patch, Scale } from '../types';
 import { pack, unpack } from './packing';
 
@@ -15,11 +14,6 @@ export const plugFn = (m: MelodyTransformation, fn: MelodySingleTransformation):
 
     const packed = pack(p, r);
     return { melodies: [packed], scale, tempo }
-}
-
-export const generateMelodies = (m: Melody, numberOfVoices: ColNum) => {
-    const all = [m, generateVoiceB(m), generateVoiceC(m), generateVoiceD(m)];
-    return all.slice(0, numberOfVoices);
 }
 
 export const runPatch = (a: ColNum, b: ColNum, c: ColNum, d: ColNum, e: ColNum, patch: Patch, scale: Scale): MelodyTransformation => {

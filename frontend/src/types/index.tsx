@@ -14,6 +14,7 @@ export type PackingFunction = (pitches: Pitch[], durations: NoteLength[]) => Mel
 export type MelodySingleTransformation = (p: Pitch[], r: NoteLength[]) => UnpackedMelody;
 export type MelodyTransFunc = (m: MelodyTransformation) => MelodyTransformation;
 export type ColNum = 1 | 2 | 3 | 4 | 5;
+export type VoiceGenerator = (melo: Melody) => Melody;
 
 export type Patch = {
   1: {

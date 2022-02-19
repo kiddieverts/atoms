@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 import { ColNum, Melodies } from './types';
 import { combineMelodies } from './utils/combineMelodies';
-import { patch, scale } from './music/patch';
+import { patch, scale } from './music/0_patch';
 import { runPatch } from './utils/helpers';
 import MidiPlayer from './components/MidiPlayer';
 import Pads from './components/Pads';
