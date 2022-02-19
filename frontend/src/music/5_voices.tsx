@@ -17,13 +17,13 @@ const generateMelodies = (m: Melody, numberOfVoices: ColNum) => {
 
 const generateVoiceB: VoiceGenerator = (melody) =>
   melody
-    .map(([p, r]) => [p + 12, r + 2] as MelodyNote)
+    .map(([pitch, noteLength]) => [pitch + 12, noteLength + 2] as MelodyNote)
     .slice(2, 8)
     .reverse();
 
 const generateVoiceC: VoiceGenerator = (melody) =>
   melody
-    .map(([p, r]) => [p - 12, r + 1] as MelodyNote)
+    .map(([pitch, noteLength]) => [pitch - 12, noteLength + 1] as MelodyNote)
     .slice(5, 12);
 
 const generateVoiceD: VoiceGenerator = (melody) =>
