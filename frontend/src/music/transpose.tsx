@@ -7,9 +7,9 @@ export const transposeUpOneOctave = (m) => _transpose(m, 12);
 export const transposeUpTwoOctaves = (m) => _transpose(m, 24);
 
 const _transpose = (m: MelodyTransformation, val: number): MelodyTransformation => {
-  const [melo, scale, tempo] = m;
-  let [p, r] = unpack(melo[0]);
+  const { melodies, scale, tempo } = m;
+  let [p, r] = unpack(melodies[0]);
   p = p.map(pp => (pp + val > 0 ? pp + val : null) as Pitch);
   const packed = pack(p, r);
-  return [[packed], scale, tempo];
+  return { melodies: [packed], scale, tempo };
 }

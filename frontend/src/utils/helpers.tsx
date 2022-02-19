@@ -3,20 +3,18 @@ import { MelodyTransformation, MelodyNote, Pitch, Melody, MelodySingleTransforma
 import { pack, unpack } from './packing';
 
 export const makeMelody = (m: MelodyTransformation, melody: Melody): MelodyTransformation => {
-    const [, scale, tempo] = m;
+    const { scale, tempo } = m;
     const transposed: MelodyNote[] = melody.map(([p, r]) => ([p - 36 as Pitch, r]));
-    const result: MelodyTransformation = [[transposed], scale, tempo];
-    return result;
+    return { melodies: [transposed], scale, tempo };
 }
 
 export const plugFn = (m: MelodyTransformation, fn: MelodySingleTransformation): MelodyTransformation => {
-    const [melo] = m;
+    const { melodies: melo, scale, tempo } = m;
     let [p, r] = unpack(melo[0]);
     [p, r] = fn(p, r);
 
     const packed = pack(p, r);
-    const result: MelodyTransformation = [[packed], ['C'], 120];
-    return result;
+    return { melodies: [packed], scale, tempo }
 }
 
 export const generateMelodies = (m: Melody, numberOfVoices: ColNum) => {

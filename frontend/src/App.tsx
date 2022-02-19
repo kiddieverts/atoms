@@ -31,7 +31,7 @@ const App = () => {
     const scale: Scale = ['C', 'D', 'E', 'F#', 'G', 'A', 'B'];
 
     const result = runPatch(melodyNumber, transNum, oct, numberOfVoices, tempoNum, patch, scale);
-    const [voices, sc, t] = result;
+    const { melodies: voices, tempo: t } = result;
 
     setVoices(combineMelodies(voices));
     setTempo(t);

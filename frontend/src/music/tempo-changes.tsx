@@ -1,22 +1,18 @@
 import { MelodyTransformation } from '../types';
 
 export const tempo30 = (m: MelodyTransformation) => {
-  const [melo, scale] = m;
-  const result: MelodyTransformation = [melo, scale, 30.0];
-  return result;
+  const { melodies, scale } = m;
+  return { melodies, scale, tempo: 30.0 };
 }
 export const tempo60 = (m: MelodyTransformation) => {
-  const [melo, scale] = m;
-  const result: MelodyTransformation = [melo, scale, 60.0];
-  return result;
+  const { melodies, scale } = m;
+  return { melodies, scale, tempo: 60.0 };
 }
 export const tempo120 = (m: MelodyTransformation) => {
-  const [melo, scale] = m;
-  const result: MelodyTransformation = [melo, scale, 120.0];
-  return result;
+  const { melodies, scale } = m;
+  return { melodies, scale, tempo: 120.0 };
 }
 export const tempo180 = (m: MelodyTransformation) => {
-  const [melo, scale] = m;
-  const result: MelodyTransformation = [melo, scale, 180.0];
-  return result;
+  const { melodies, scale } = m;
+  return { melodies, scale, tempo: 180.0 };
 }

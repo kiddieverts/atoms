@@ -7,7 +7,7 @@ export const doVoiceC = (m: MelodyTransformation): MelodyTransformation => _gene
 export const doVoiceD = (m: MelodyTransformation): MelodyTransformation => _generate(m, 4);
 
 const _generate = (m: MelodyTransformation, num: ColNum): MelodyTransformation => {
-  const x = generateMelodies(m[0][0], num);
-  const final: MelodyTransformation = [x, m[1], m[2]];
-  return final;
+  const { scale, tempo, melodies: melo } = m;
+  const melodies = generateMelodies(melo[0], num);
+  return { melodies, scale, tempo };
 }

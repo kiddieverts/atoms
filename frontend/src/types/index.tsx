@@ -6,7 +6,7 @@ export type Scale = PitchName[];
 export type Melody = MelodyNote[];
 export type Tempo = number;
 export type Melodies = Melody[];
-export type MelodyTransformation = readonly [Melodies, Scale, Tempo]; // TODO: Use object instead
+export type MelodyTransformation = { melodies: Melodies; scale: Scale; tempo: Tempo; }
 export type TransformationFunction = (m: MelodyTransformation) => MelodyTransformation;
 export type UnpackedMelody = readonly [Pitch[], NoteLength[]];
 export type UnpackingFunction = (packedMelody: Melody) => UnpackedMelody;
