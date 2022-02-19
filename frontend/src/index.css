@@ -80,11 +80,9 @@ h1 {
 .boxx {
   border: 2px solid rgb(249, 224, 0);
   padding: 16px;
-  /* border-radius: 8px; */
 }
 
 button {
-  /* border-radius: 8px; */
   border: 2px solid rgb(249, 224, 0);
   height: 64px;
   min-width: 100px;

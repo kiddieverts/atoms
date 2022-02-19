@@ -1,11 +1,13 @@
 import { doRetrograde, doEightNotesTwoAndSixUpOctave, doUpDiatonicThird, doRetrogradeEveryOther } from './melody-transform'
 import { doVoiceB, doVoiceC, doVoiceD } from './voices';
 import { getMelodyA, getMelodyB, getMelodyC, getMelodyD } from './melody-picker';
-import { MelodyTransformation, Patch } from '../types';
+import { MelodyTransformation, Patch, Scale } from '../types';
 import { tempo120, tempo180, tempo30, tempo60 } from './tempo-changes';
 import { transposeDownOneOctave, transposeUpOneOctave, transposeUpTwoOctaves } from './transpose';
 
 const doNoting = (m: MelodyTransformation): MelodyTransformation => m;
+
+export const scale: Scale = ['C', 'D', 'E', 'F#', 'G', 'A', 'B'];
 
 export const patch: Patch = {
   1: {
