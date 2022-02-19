@@ -4,19 +4,32 @@ export type MelodyNote = readonly [Pitch, NoteLength];
 type PitchName = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
 export type Scale = PitchName[];
 export type Melody = MelodyNote[];
-export type Tempo = number;
 export type Melodies = Melody[];
+export type Tempo = number;
 export type MelodyTransformation = { melodies: Melodies; scale: Scale; tempo: Tempo; }
 export type TransformationFunction = (m: MelodyTransformation) => MelodyTransformation;
-export type UnpackedMelody = readonly [Pitch[], NoteLength[]];
+type UnpackedMelody = readonly [Pitch[], NoteLength[]];
 export type UnpackingFunction = (packedMelody: Melody) => UnpackedMelody;
 export type PackingFunction = (pitches: Pitch[], durations: NoteLength[]) => Melody;
-export type MelodySingleTransformation = (p: Melody, s: Scale) => Melody;
-export type MelodyTransFunc = (m: MelodyTransformation) => MelodyTransformation;
+export type VoiceTransformationFunction = (p: Melody, s: Scale) => Melody;
 export type ColNum = 1 | 2 | 3 | 4 | 5;
 export type VoiceGenerator = (melo: Melody) => Melody;
-
 export type StartFunction = (s: Scale, t: Tempo) => MelodyTransformation;
+export type PadStateLabels = {
+  1: string;
+  2: string;
+  3: string;
+  4: string;
+  5: string;
+}
+
+export type PadState = {
+  1: ColNum,
+  2: ColNum,
+  3: ColNum,
+  4: ColNum,
+  5: ColNum,
+}
 
 export type Patch = {
   1: {

@@ -1,11 +1,11 @@
-import { MelodySingleTransformation, MelodyTransformation, Pitch, Scale } from '../types';
+import { VoiceTransformationFunction, MelodyTransformation, Pitch, Scale } from '../types';
 import { applyToAllVoices } from '../utils/helpers';
 
 /* Retrograde */
-export const retrograde: MelodySingleTransformation = (m) => m.reverse();
+export const retrograde: VoiceTransformationFunction = (m) => m.reverse();
 
 /* Eight notes two and six up are up an octave */
-export const eightNotesTwoAndSixUpOctave: MelodySingleTransformation = (melody) => {
+export const eightNotesTwoAndSixUpOctave: VoiceTransformationFunction = (melody) => {
   // TODO: Make algo handle more than 2 bar loops.
   const m = _make32Steps(melody);
   const arr = [];
@@ -25,7 +25,7 @@ export const eightNotesTwoAndSixUpOctave: MelodySingleTransformation = (melody) 
 }
 
 /* Up a diatonic third */
-export const upDiatonicThird: MelodySingleTransformation = (melody, scale) => {
+export const upDiatonicThird: VoiceTransformationFunction = (melody, scale) => {
   return melody.map(([pitch, noteLength]) => {
     const changedPitch = _transposeDiatonicUp(pitch, scale, 2);
     return [changedPitch, noteLength];
@@ -70,7 +70,7 @@ const _transposeDiatonicUp = (note: Pitch, scale: Scale, offset: number): Pitch 
 }
 
 /* Retrograde flipped within the mesasure */
-export const retrogradeEveryOther: MelodySingleTransformation = (melody) => {
+export const retrogradeEveryOther: VoiceTransformationFunction = (melody) => {
   const retrograde = melody.reverse();
   const m = _make32Steps(retrograde);
   const arr = _collectIntoBeats(m);

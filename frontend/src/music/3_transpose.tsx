@@ -1,7 +1,7 @@
-import { MelodyTransformation, MelodyTransFunc, Pitch } from "../types";
+import { MelodyTransformation, Pitch, TransformationFunction } from "../types";
 import { pack, unpack } from "../utils/packing";
 
-export const transposeDownOneOctave: MelodyTransFunc = (m) => transpose(m, -12);
+export const transposeDownOneOctave: TransformationFunction = (m) => transpose(m, -12);
 export const transposeUpOneOctave = (m) => transpose(m, 12);
 export const transposeUpTwoOctaves = (m) => transpose(m, 24);
 

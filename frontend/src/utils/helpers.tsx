@@ -1,6 +1,6 @@
-import { MelodyTransformation, MelodySingleTransformation, ColNum, Patch, Scale, } from '../types';
+import { MelodyTransformation, VoiceTransformationFunction, ColNum, Patch, Scale, } from '../types';
 
-export const applyToAllVoices = ({ melodies: melo, scale, tempo }: MelodyTransformation, fn: MelodySingleTransformation): MelodyTransformation => {
+export const applyToAllVoices = ({ melodies: melo, scale, tempo }: MelodyTransformation, fn: VoiceTransformationFunction): MelodyTransformation => {
     const melodies = melo.map(me => fn(me, scale));
     return { melodies, scale, tempo }
 }
