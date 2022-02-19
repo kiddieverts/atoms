@@ -1,4 +1,4 @@
-import { VoiceTransformationFunction, MelodyTransformation, Pitch, Scale } from '../types';
+import { VoiceTransformationFunction, Pitch, Scale, TransformationFunction } from '../types';
 import { applyToAllVoices } from '../utils/helpers';
 
 /* Retrograde */
@@ -135,7 +135,7 @@ const _makeCompact = (melody) => {
 }
 
 
-export const doRetrograde = (m: MelodyTransformation): MelodyTransformation => applyToAllVoices(m, retrograde);
-export const doEightNotesTwoAndSixUpOctave = (m: MelodyTransformation): MelodyTransformation => applyToAllVoices(m, eightNotesTwoAndSixUpOctave);
-export const doUpDiatonicThird = (m: MelodyTransformation): MelodyTransformation => applyToAllVoices(m, upDiatonicThird);
-export const doRetrogradeEveryOther = (m: MelodyTransformation): MelodyTransformation => applyToAllVoices(m, retrogradeEveryOther);
+export const doRetrograde: TransformationFunction = (m) => applyToAllVoices(m, retrograde);
+export const doEightNotesTwoAndSixUpOctave: TransformationFunction = (m) => applyToAllVoices(m, eightNotesTwoAndSixUpOctave);
+export const doUpDiatonicThird: TransformationFunction = (m) => applyToAllVoices(m, upDiatonicThird);
+export const doRetrogradeEveryOther: TransformationFunction = (m) => applyToAllVoices(m, retrogradeEveryOther);

@@ -1,5 +1,5 @@
 import { doRetrograde, doEightNotesTwoAndSixUpOctave, doUpDiatonicThird, doRetrogradeEveryOther } from './2_melody-transform'
-import { doVoiceB as calculateVoiceB, doVoiceC as calculateVoiceC, doVoiceD as calculateVoiceD } from './5_voices';
+import { calculateVoiceB, calculateVoiceC, calculateVoiceD } from './5_voices';
 import { getMelodyA, getMelodyB, getMelodyC, getMelodyD } from './1_melody-picker';
 import { Patch, Scale } from '../types';
 import { tempo120, tempo180, tempo30, tempo60 } from './4_tempo-changes';

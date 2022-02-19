@@ -1,13 +1,12 @@
 import { ColNum, MelodyTransformation, VoiceGenerator } from "../types";
 import { Melody, MelodyNote, Pitch, NoteLength } from "../types";
 
-export const doVoiceA = (m: MelodyTransformation): MelodyTransformation => generate(m, 1);
-export const doVoiceB = (m: MelodyTransformation): MelodyTransformation => generate(m, 2);
-export const doVoiceC = (m: MelodyTransformation): MelodyTransformation => generate(m, 3);
-export const doVoiceD = (m: MelodyTransformation): MelodyTransformation => generate(m, 4);
+export const calculateVoiceB = (m: MelodyTransformation): MelodyTransformation => generate(m, 2);
+export const calculateVoiceC = (m: MelodyTransformation): MelodyTransformation => generate(m, 3);
+export const calculateVoiceD = (m: MelodyTransformation): MelodyTransformation => generate(m, 4);
 
 const generate = ({ scale, tempo, melodies: melo }: MelodyTransformation, num: ColNum): MelodyTransformation => {
-  const melodies = generateMelodies(melo[0], num);
+  const melodies = generateMelodies(melo[0], num); // TODO: <--
   return { melodies, scale, tempo };
 }
 
@@ -29,18 +28,18 @@ const generateVoiceC: VoiceGenerator = (melody) =>
 
 const generateVoiceD: VoiceGenerator = (melody) =>
   melody
-    .map(arr => {
-      const [p, r] = arr;
-      const pp = ((r === 1 || r === 4)
-        ? p
-        : p - 5 as Pitch);
+    .map(note => {
+      const [pitch, noteLength] = note;
+      const newPitch = ((noteLength === 1 || noteLength === 4)
+        ? pitch
+        : pitch - 5 as Pitch);
 
-      const rr: NoteLength = (r === 4 || r === 2)
+      const newLength: NoteLength = (noteLength === 4 || noteLength === 2)
         ? 1
         : 2;
 
-      const x: MelodyNote = [pp, rr];
-      return x;
+      const newNote: MelodyNote = [newPitch, newLength];
+      return newNote;
     })
     .reverse()
     .slice(3, 8);
