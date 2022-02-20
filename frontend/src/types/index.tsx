@@ -21,6 +21,7 @@ export type PadStateLabels = {
   3: string;
   4: string;
   5: string;
+  6: string;
 }
 
 export type PadState = {
@@ -29,6 +30,7 @@ export type PadState = {
   3: ColNum,
   4: ColNum,
   5: ColNum,
+  6: ColNum,
 }
 
 export type Patch = {
@@ -37,29 +39,41 @@ export type Patch = {
     2: StartFunction;
     3: StartFunction;
     4: StartFunction;
+    5: StartFunction;
   };
   2: {
     1: TransformationFunction;
     2: TransformationFunction;
     3: TransformationFunction;
     4: TransformationFunction;
+    5: TransformationFunction;
   };
   3: {
     1: TransformationFunction;
     2: TransformationFunction;
     3: TransformationFunction;
     4: TransformationFunction;
+    5: TransformationFunction;
   };
   4: {
     1: TransformationFunction;
     2: TransformationFunction;
     3: TransformationFunction;
     4: TransformationFunction;
+    5: TransformationFunction;
   };
   5: {
     1: TransformationFunction;
     2: TransformationFunction;
     3: TransformationFunction;
     4: TransformationFunction;
+    5: TransformationFunction;
+  },
+  6: {
+    1: TransformationFunction;
+    2: TransformationFunction;
+    3: TransformationFunction;
+    4: TransformationFunction;
+    5: TransformationFunction;
   };
 };

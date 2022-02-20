@@ -14,7 +14,8 @@ const DEFAULT_STATE: PadState = {
   2: 1,
   3: 1,
   4: 1,
-  5: 1
+  5: 1,
+  6: 1,
 }
 const DEFAULT_TEMPO = 120.0;
 
@@ -22,9 +23,10 @@ const stateToObj = (s: PadState) => {
   return {
     melodyNumber: s[1],
     transNum: s[2],
-    oct: s[3],
-    numberOfVoices: s[4],
-    tempoNum: s[5]
+    rhythmTransNum: s[3],
+    oct: s[4],
+    numberOfVoices: s[5],
+    tempoNum: s[6]
   }
 }
 
@@ -43,8 +45,9 @@ const App = () => {
   const [state, setState] = useState<PadState>(DEFAULT_STATE);
 
   useEffect(() => {
-    const { melodyNumber, transNum, oct, numberOfVoices, tempoNum } = stateToObj(state);
-    const result = runPatch(melodyNumber, transNum, oct, numberOfVoices, tempoNum, patch, scale);
+    // TODO: <--
+    const { melodyNumber, transNum, rhythmTransNum, oct, numberOfVoices, tempoNum } = stateToObj(state);
+    const result = runPatch(melodyNumber, transNum, rhythmTransNum, oct, numberOfVoices, tempoNum, patch, scale);
     const { melodies, tempo: t } = result;
 
     setVoices(combineMelodies(melodies));
@@ -155,8 +158,8 @@ const App = () => {
 
         <Pads
           state={state}
-          labels={{ 1: 'melody', 2: 'transformation', 3: 'octave', 4: 'density', 5: 'tempo' }}
-          cols={4}
+          labels={{ 1: 'melody', 2: 'transformation', 3: 'rhythm change', 4: 'octave', 5: 'density', 6: 'tempo' }}
+          cols={5}
           onUpdate={handlePadUpdate}
         />
 
