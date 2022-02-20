@@ -1,28 +1,50 @@
-import { VoiceTransformationFunction, Pitch, Scale, TransformationFunction } from '../types';
+import { VoiceTransformationFunction, MelodyNote, Pitch, Scale, Melody, TransformationFunction } from '../types';
 import { applyToAllVoices } from '../utils/helpers';
 
 /* Retrograde */
 export const retrograde: VoiceTransformationFunction = (m) => m.reverse();
 
-/* Eight notes two and six up are up an octave */
 export const eightNotesTwoAndSixUpOctave: VoiceTransformationFunction = (melody) => {
-  // TODO: Make algo handle more than 2 bar loops.
-  const m = _make32Steps(melody);
-  const arr = [];
+  const rng = [5, 6, 7, 8, 21, 22, 23, 24];
+  const newMelody: Melody = [];
+  let head = 0;
 
-  for (let i = 0; i <= m.length - 1; i++) {
-    const stepsToBeTransposed = [3, 4, 13, 14, 19, 20, 27, 28];
-    if (stepsToBeTransposed.indexOf(i) !== -1) {
-      const newPitch = m[i][0] + 12;
-      const duration = m[i][1];
-      arr.push([newPitch, duration]);
-    } else {
-      arr.push(m[i]);
-    }
+  for (let [pitch, noteLength] of melody) {
+    const current = head;
+
+    const val: MelodyNote = rng.includes(current + 1)
+      ? [pitch + 12 as Pitch, noteLength]
+      : [pitch, noteLength];
+
+    newMelody.push(val);
+
+    head = head + noteLength < 32
+      ? head + noteLength
+      : 0;
   }
 
-  return _makeCompact(arr);
+  return newMelody;
 }
+
+/* Eight notes two and six up are up an octave */
+// export const _old_eightNotesTwoAndSixUpOctave: VoiceTransformationFunction = (melody) => {
+//   // TODO: Make algo handle more than 2 bar loops.
+//   const m = _make32Steps(melody);
+//   const arr = [];
+
+//   for (let i = 0; i <= m.length - 1; i++) {
+//     const stepsToBeTransposed = [3, 4, 13, 14, 19, 20, 27, 28];
+//     if (stepsToBeTransposed.indexOf(i) !== -1) {
+//       const newPitch = m[i][0] + 12;
+//       const duration = m[i][1];
+//       arr.push([newPitch, duration]);
+//     } else {
+//       arr.push(m[i]);
+//     }
+//   }
+
+//   return _makeCompact(arr);
+// }
 
 /* Up a diatonic third */
 export const upDiatonicThird: VoiceTransformationFunction = (melody, scale) => {
