@@ -1,9 +1,9 @@
 import { doRetrograde, doEightNotesTwoAndSixUpOctave, doUpDiatonicThird, doRetrogradeEveryOther } from './2_melody-transform'
-import { calculateVoiceB, calculateVoiceC, calculateVoiceD } from './5_voices';
+import { calculateVoiceB, calculateVoiceC, calculateVoiceD } from './6_voices';
 import { getMelodyA, getMelodyB, getMelodyC, getMelodyD, getMelodyE } from './1_melody-picker';
 import { Patch, Scale } from '../types';
 import { tempo120, tempo180, tempo30, tempo60 } from './4_tempo-changes';
-import { transposeDownOneOctave, transposeUpOneOctave, transposeUpTwoOctaves } from './3_transpose';
+import { transposeDownOneOctave, transposeUpOneOctave, transposeUpTwoOctaves } from './5_transpose';
 import { doNothing } from '../utils/do-nothing';
 
 export const patch: Patch = {
