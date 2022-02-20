@@ -26,26 +26,6 @@ export const eightNotesTwoAndSixUpOctave: VoiceTransformationFunction = (melody)
   return newMelody;
 }
 
-/* Eight notes two and six up are up an octave */
-// export const _old_eightNotesTwoAndSixUpOctave: VoiceTransformationFunction = (melody) => {
-//   // TODO: Make algo handle more than 2 bar loops.
-//   const m = _make32Steps(melody);
-//   const arr = [];
-
-//   for (let i = 0; i <= m.length - 1; i++) {
-//     const stepsToBeTransposed = [3, 4, 13, 14, 19, 20, 27, 28];
-//     if (stepsToBeTransposed.indexOf(i) !== -1) {
-//       const newPitch = m[i][0] + 12;
-//       const duration = m[i][1];
-//       arr.push([newPitch, duration]);
-//     } else {
-//       arr.push(m[i]);
-//     }
-//   }
-
-//   return _makeCompact(arr);
-// }
-
 /* Up a diatonic third */
 export const upDiatonicThird: VoiceTransformationFunction = (melody, scale) => {
   return melody.map(([pitch, noteLength]) => {
@@ -86,7 +66,6 @@ const _transposeDiatonicUp = (note: Pitch, scale: Scale, offset: number): Pitch 
   }
 
   const i = scaleNumbers.indexOf(p);
-  // const combined = scaleNumbers.concat(scaleNumbers.map(function (num) { return num + 12; }));
   const combined = scaleNumbers.concat(scaleNumbers.map(num => num + 12));
   return combined[i + offset] + (octave * 12) as Pitch;
 }
