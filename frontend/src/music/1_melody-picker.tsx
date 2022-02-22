@@ -62,23 +62,21 @@ export const melodyD: MelodyNote[] = [
 ];
 
 export const melodyE: MelodyNote[] = [
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
-  [60, 4], // c1
+  [64, 1], // e1
+  [69, 1], // a1
+  [72, 1], // c2
+  [69, 1], // a1
+  [null, 8], // silence
+  [64, 1], // e1
+  [69, 1], // a1
+  [72, 1], // c2
+  [null, 12], // a2
+  [null, 4], // silence
+  [69, 1], // a1
+  [72, 4], // c2
+  [64, 1], // e1
+  [69, 1], // a1
+  [74, 4] // d1
 ];
 
 export const getMelodyA = (scale: Scale, tempo: Tempo) => ({ melodies: [downThreeOctaves(melodyA)], scale, tempo });
@@ -88,4 +86,7 @@ export const getMelodyD = (scale: Scale, tempo: Tempo) => ({ melodies: [downThre
 export const getMelodyE = (scale: Scale, tempo: Tempo) => ({ melodies: [downThreeOctaves(melodyE)], scale, tempo });
 
 const downThreeOctaves = (melody: Melody) =>
-  melody.map(([pitch, noteLength]) => ([pitch - 36 as Pitch, noteLength])) as Melody;
+  melody.map(([pitch, noteLength]) => {
+    const p: Pitch = pitch !== null ? pitch : null
+    return [p, noteLength] as MelodyNote;
+  });

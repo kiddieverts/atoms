@@ -67,11 +67,12 @@ h1 {
 
 .cent{
   display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	flex-wrap: nowrap;
-	justify-content: right;
-	align-items: center;
-	align-content: stretch;
+	justify-content: center;
+  text-align: right;
+	align-items: right;
+	align-content: center;
   width: 120px;
   text-align: right;
   padding-right: 24px;

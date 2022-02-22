@@ -1,4 +1,5 @@
-import { VoiceTransformationFunction, MelodyNote, Pitch, Scale, Melody, TransformationFunction } from '../types';
+import { noteNumberToNotName } from '../noteNumberToNotName';
+import { VoiceTransformationFunction, MelodyNote, Pitch, Scale, Melody, TransformationFunction, PitchName } from '../types';
 import { applyToAllVoices } from '../utils/helpers';
 
 /* Retrograde */
@@ -53,7 +54,7 @@ const _noteNamesToNumbers = (scale: Scale) => {
   return scale.map(pitch => mapping[pitch]);
 }
 
-const _transposeDiatonicUp = (note: Pitch, scale: Scale, offset: number): Pitch => {
+export const _transposeDiatonicUp = (note: Pitch, scale: Scale, offset: number): Pitch => {
   if (note === null) return null;
 
   const scaleNumbers = _noteNamesToNumbers(scale);

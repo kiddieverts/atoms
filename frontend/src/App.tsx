@@ -10,12 +10,12 @@ import Pads from './components/Pads';
 
 const MAX_LENGTH = 1000000000;
 const DEFAULT_STATE: PadState = {
-  1: 1,
-  2: 1,
+  1: 4,
+  2: 3,
   3: 1,
-  4: 1,
+  4: 2,
   5: 1,
-  6: 1,
+  6: 2,
 }
 const DEFAULT_TEMPO = 120.0;
 
@@ -158,8 +158,9 @@ const App = () => {
 
         <Pads
           state={state}
-          labels={{ 1: 'melody', 2: 'transformation', 3: 'rhythm change', 4: 'octave', 5: 'density', 6: 'tempo' }}
+          labels={{ 1: 'melody', 2: 'transformation', 3: 'rhythm change', 4: 'density', 5: 'tempo', 6: 'octave' }}
           cols={5}
+          patch={patch}
           onUpdate={handlePadUpdate}
         />
 
