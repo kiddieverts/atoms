@@ -19,22 +19,10 @@ const DEFAULT_STATE: PadState = {
 }
 const DEFAULT_TEMPO = 120.0;
 
-const stateToObj = (s: PadState) => {
-  return {
-    melodyNumber: s[1],
-    transNum: s[2],
-    rhythmTransNum: s[3],
-    oct: s[4],
-    numberOfVoices: s[5],
-    tempoNum: s[6]
-  }
-}
-
 type Song = { [key: string]: PadState }
 type Mode = 'EXPLORE' | 'REC' | 'LISTEN' | '';
 
 const App = () => {
-  const audioContext = new AudioContext();
   const [voices, setVoices] = useState<Melodies>([]);
   const [max, setMax] = useState(MAX_LENGTH);
   const [isStopped, setIsStopped] = useState(true);
@@ -45,13 +33,11 @@ const App = () => {
   const [state, setState] = useState<PadState>(DEFAULT_STATE);
 
   useEffect(() => {
-    // TODO: <--
-    const { melodyNumber, transNum, rhythmTransNum, oct, numberOfVoices, tempoNum } = stateToObj(state);
-    const result = runPatch(melodyNumber, transNum, rhythmTransNum, oct, numberOfVoices, tempoNum, patch, scale);
-    const { melodies, tempo: t } = result;
-
+    const { melodies, tempo: t } = runPatch(state, patch, scale);
     setVoices(combineMelodies(melodies));
-    setTempo(t);
+    if (t !== tempo) {
+      setTempo(t);
+    }
 
     if (mode === 'REC') {
       addStep();
@@ -150,7 +136,6 @@ const App = () => {
 
         <MidiPlayer
           melodies={voices}
-          audioContext={audioContext}
           isStopped={isStopped}
           tempo={tempo}
           onUpdateCounter={handleUpdateCounter}

@@ -1,7 +1,12 @@
 export const playSample = (audioContext, audioBuffer, time, playbackRate = 1, release = 0.3) => {
   const gainNode = new GainNode(audioContext);
 
-  const sampleSource = audioContext.createBufferSource();
+  const channels = 2;
+  // Create an empty two second stereo buffer at the
+  // sample rate of the AudioContext
+  const frameCount = audioContext.sampleRate * 1.0;
+
+  const sampleSource = audioContext.createBufferSource(channels, frameCount, audioContext.sampleRate);
   sampleSource.buffer = audioBuffer;
   sampleSource.playbackRate.value = playbackRate;
   sampleSource.connect(gainNode)

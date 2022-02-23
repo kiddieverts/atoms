@@ -1,11 +1,18 @@
-import { MelodyTransformation, VoiceTransformationFunction, ColNum, Patch, Scale, } from '../types';
+import { MelodyTransformation, VoiceTransformationFunction, ColNum, Patch, Scale, PadState, } from '../types';
 
 export const applyToAllVoices = ({ melodies: melo, scale, tempo }: MelodyTransformation, fn: VoiceTransformationFunction): MelodyTransformation => {
     const melodies = melo.map(me => fn(me, scale));
     return { melodies, scale, tempo }
 }
 
-export const runPatch = (a: ColNum, b: ColNum, c: ColNum, d: ColNum, e: ColNum, f: ColNum, patch: Patch, scale: Scale): MelodyTransformation => {
+export const runPatch = (state: PadState, patch: Patch, scale: Scale): MelodyTransformation => {
+    const a = state[1];
+    const b = state[2];
+    const c = state[3];
+    const d = state[4];
+    const e = state[5];
+    const f = state[6];
+
     const fnOne = patch[1][a][0];
 
     const fnTwo = patch[2][b][0];
@@ -15,7 +22,5 @@ export const runPatch = (a: ColNum, b: ColNum, c: ColNum, d: ColNum, e: ColNum, 
     const fnSix = patch[6][f][0];
     const startWith = fnOne(scale, 120.0);
 
-    const x = fnSix(fnFive(fnFour(fnThree(fnTwo(startWith)))));
-
-    return x;
+    return fnSix(fnFive(fnFour(fnThree(fnTwo(startWith)))));
 }

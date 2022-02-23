@@ -6,7 +6,8 @@ let nextTick = 0.0;
 let theMelodies = [];
 let globalCnt = 0;
 let megaGlobalCount = -1;
-let globalTempo = 120.0;
+let interval = 0.0
+let timerId = undefined;
 
 const reset = () => {
   globalCnt = 0;
@@ -14,18 +15,18 @@ const reset = () => {
   nextTick = 0.0;
 }
 
-const MidiPlayer = ({ isStopped, audioContext, tempo, onUpdateCounter, melodies }) => {
+const MidiPlayer = ({ isStopped, tempo, onUpdateCounter, melodies }) => {
+  const [audioContext] = useState(new AudioContext());
   const [playFn, samplesReady] = useInstrument(audioContext);
-  const [timerId, setTimerId] = useState(undefined);
 
   useEffect(() => {
     theMelodies = melodies;
-    // Reset counter whenever a new melody is received
+    // Reset counter whenever new melodies are received
     // globalCnt = 0;
   }, [melodies]);
 
   useEffect(() => {
-    globalTempo = tempo;
+    interval = 60.0 / tempo / 4.0;
   }, [tempo]);
 
   const scheduler = () => {
@@ -36,14 +37,14 @@ const MidiPlayer = ({ isStopped, audioContext, tempo, onUpdateCounter, melodies 
     const lookahead = 75.0; // How frequently to call scheduling function (in milliseconds)
 
     while (nextTick < audioContext.currentTime + scheduleAheadTime) {
-      getNextTick(globalTempo);
+      nextTick += interval;
 
-      onBang(nextTick, theMelodies, playFn);
+      onBang(playFn);
       onUpdateCounter(megaGlobalCount);
       globalCnt = globalCnt + 1;
       megaGlobalCount = megaGlobalCount + 1;
     }
-    setTimerId(window.setTimeout(scheduler, lookahead));// TODO: Cancel timeout on stop
+    timerId = window.setTimeout(scheduler, lookahead)
   }
 
   useEffect(() => {
@@ -64,23 +65,18 @@ const MidiPlayer = ({ isStopped, audioContext, tempo, onUpdateCounter, melodies 
   </>
 };
 
-const getNextTick = (tempo) => {
-  const interval = 60.0 / tempo / 4.0;
-  nextTick += interval;
-}
-
-const onBang = (nextTick, melodies, playFn) => {
+const onBang = (playFn) => {
   // Loop
   if (globalCnt >= TOTAL_NUMBER_OF_TICKS) {
     globalCnt = 0;
   }
 
-  const tick = melodies[globalCnt];
+  const tick = theMelodies[globalCnt];
 
-  for (let [p, r] of tick) {
+  for (let [pitch, r] of tick) {
     if (!!r) {
       const duration = 1;
-      playFn(p, nextTick, duration)
+      playFn(pitch, nextTick, duration)
     }
   }
 }
