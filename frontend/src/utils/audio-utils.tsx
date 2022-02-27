@@ -12,7 +12,7 @@ export const playSample = (audioContext, audioBuffer, time, playbackRate = 1, re
   sampleSource.connect(gainNode)
   sampleSource.start(time);
 
-  gainNode.gain.cancelScheduledValues(time);
+  // gainNode.gain.cancelScheduledValues(time);
   gainNode.gain.setValueAtTime(0, time);
 
   gainNode.gain.linearRampToValueAtTime(1, time + 0.01);
