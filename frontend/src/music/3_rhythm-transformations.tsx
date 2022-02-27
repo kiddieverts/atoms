@@ -72,6 +72,7 @@ const getHalvedLength = (nl: NoteLength): NoteLengthAndRepeats => {
     case 8: return [4, 2];
     case 10: return [5, 2];
     case 12: return [6, 2];
+    case 16: return [8, 2];
     default: throw new Error('');
   }
 }
