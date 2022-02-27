@@ -15,8 +15,10 @@ const reset = () => {
   nextTick = 0.0;
 }
 
+let audioContext = new AudioContext();
+
 const MidiPlayer = ({ isStopped, tempo, onUpdateCounter, melodies }) => {
-  const [audioContext] = useState(new AudioContext());
+  // const [audioContext, setAudioContext] = useState(new AudioContext());
   const [playFn, samplesReady] = useInstrument(audioContext);
 
   useEffect(() => {
@@ -50,9 +52,13 @@ const MidiPlayer = ({ isStopped, tempo, onUpdateCounter, melodies }) => {
   useEffect(() => {
     if (isStopped === true) {
       audioContext.suspend();
+      // audioContext.close();
       window.clearTimeout(timerId);
       reset();
     } else {
+      console.log('play');
+      // audioContext = null;
+      // audioContext = new AudioContext();
       audioContext.resume();
       scheduler();
     }
