@@ -49,6 +49,7 @@ const MidiPlayer = ({ isStopped, tempo, onUpdateCounter, melodies }) => {
 
   useEffect(() => {
     if (isStopped === true) {
+      audioContext.suspend();
       window.clearTimeout(timerId);
       reset();
     } else {
