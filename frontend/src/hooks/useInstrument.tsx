@@ -1,18 +1,74 @@
 import { useEffect, useState } from 'react';
 import { getAudioBufferFromFile, playSample } from '../utils/audio-utils';
 
-const file1 = 'Orpheus%20p%20C0'; // 0
-const file2 = 'Orpheus%20p%20G0'; // 7
-const file3 = 'Orpheus%20p%20D1'; // 14
-const file4 = 'Orpheus%20p%20A1'; // 21
-const file5 = 'Orpheus%20p%20E2'; // 28
-const file6 = 'Orpheus%20p%20B2'; // 35
-const file7 = 'Orpheus%20p%20F%233'; // 42
-const file8 = 'Orpheus%20p%20C%234'; // 49
-const file9 = 'Orpheus%20p%20G%234'; // 56
-const file10 = 'Orpheus%20p%20D%235'; // 63
-const file11 = 'Orpheus%20p%20A%235'; // 70
-const file12 = 'Orpheus%20p%20F6'; // 77
+// const file1 = 'Orpheus%20p%20C0'; // 0
+// const file2 = 'Orpheus%20p%20G0'; // 7
+// const file3 = 'Orpheus%20p%20D1'; // 14
+// const file4 = 'Orpheus%20p%20A1'; // 21
+// const file5 = 'Orpheus%20p%20E2'; // 28
+// const file6 = 'Orpheus%20p%20B2'; // 35
+// const file7 = 'Orpheus%20p%20F%233'; // 42
+// const file8 = 'Orpheus%20p%20C%234'; // 49
+// const file9 = 'Orpheus%20p%20G%234'; // 56
+// const file10 = 'Orpheus%20p%20D%235'; // 63
+// const file11 = 'Orpheus%20p%20A%235'; // 70
+// const file12 = 'Orpheus%20p%20F6'; // 77
+
+// const file1 = 'glad%202%20p%20c0'; // 0
+// const file2 = 'glad%202%20p%20g0'; // 7
+// const file3 = 'glad%202%20p%20d1'; // 14
+// const file4 = 'glad%202%20p%20a1'; // 21
+// const file5 = 'glad%202%20p%20e2'; // 28
+// const file6 = 'glad%202%20p%20b2'; // 35
+// const file7 = 'glad%202%20p%20f%233'; // 42
+// const file8 = 'glad%202%20p%20c%234'; // 49
+// const file9 = 'glad%202%20p%20g%234'; // 56
+// const file10 = 'glad%202%20p%20d%235'; // 63
+// const file11 = 'glad%202%20p%20a%235'; // 70
+// const file12 = 'glad%202%20p%20f6'; // 77
+
+// const file1 = 'Church%20Steinway2%20P%20C0'; // 0
+// const file2 = 'Church%20Steinway2%20P%20G0'; // 7
+// const file3 = 'Church%20Steinway2%20P%20D1'; // 14
+// const file4 = 'Church%20Steinway2%20P%20A1'; // 21
+// const file5 = 'Church%20Steinway2%20P%20E2'; // 28
+// const file6 = 'Church%20Steinway2%20P%20B2'; // 35
+// const file7 = 'Church%20Steinway2%20P%20F%233'; // 42
+// const file8 = 'Church%20Steinway2%20P%20C%234'; // 49
+// const file9 = 'Church%20Steinway2%20P%20G%234'; // 56
+// const file10 = 'Church%20Steinway2%20P%20D%235'; // 63
+// const file11 = 'Church%20Steinway2%20P%20A%235'; // 70
+// const file12 = 'Church%20Steinway2%20P%20F6'; // 77
+
+// const file1 = 'Church%20Steinway2%20P%20C0'; // 0
+// const file2 = 'Church%20Steinway2%20P%20G0'; // 7
+// const file3 = 'Church%20Steinway2%20P%20D1'; // 14
+// const file4 = 'Church%20Steinway2%20P%20A1'; // 21
+// const file5 = 'Church%20Steinway2%20P%20E2'; // 28
+// const file6 = 'Church%20Steinway2%20P%20B2'; // 35
+// const file7 = 'Church%20Steinway2%20P%20F%233'; // 42
+// const file8 = 'Church%20Steinway2%20P%20C%234'; // 49
+// const file9 = 'Church%20Steinway2%20P%20G%234'; // 56
+// const file10 = 'Church%20Steinway2%20P%20D%235'; // 63
+// const file11 = 'Church%20Steinway2%20P%20A%235'; // 70
+// const file12 = 'Church%20Steinway2%20P%20F6'; // 77
+
+const file1 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20c0'; // 0
+const file2 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20g0'; // 7
+const file3 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20d1'; // 14
+const file4 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20a1'; // 21
+const file5 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20e2'; // 28
+const file6 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20b2'; // 35
+const file7 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20f%233'; // 42
+const file8 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20c%234'; // 49
+const file9 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20g%234'; // 56
+const file10 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20d%235'; // 63
+const file11 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20a%235'; // 70
+const file12 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20f6'; // 77
+
+// Pianobook%20Steinway%20Kristiansand%20v1%20p%20
+
+// Church%20Steinway2%20P%20F6
 
 const notes = {
   0: ['c0', file1],
