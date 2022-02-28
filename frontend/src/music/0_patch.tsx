@@ -2,7 +2,7 @@ import { doRetrograde, doEightNotesTwoAndSixUpOctave, doUpDiatonicThird, doRetro
 import { calculateVoiceB, calculateVoiceC, calculateVoiceD, calculateVoiceE } from './6_voices';
 import { getMelodyA, getMelodyB, getMelodyC, getMelodyD, getMelodyE } from './1_melody-picker';
 import { Patch, Scale } from '../types';
-import { tempo90, tempo120, tempo150, tempo30, tempo60 } from './4_tempo-changes';
+import { tempo90, tempo120, tempo30, tempo60, tempo15 } from './4_tempo-changes';
 import { transposeDownOneOctave, transposeDownTwoOctaves, transposeUpOneOctave, transposeUpTwoOctaves, transposeZero } from './5_transpose';
 import { doNothing } from '../utils/do-nothing';
 import { doHalveValue, doEveryEightNoteIsTurnedIntoDottedEightNote, doEveryOtherNoteIsHalved, doNotesAreDoubled } from './3_rhythm-transformations';
@@ -37,11 +37,11 @@ export const patch: Patch = {
     5: [calculateVoiceE, '5 voices'],
   },
   5: {
-    1: [tempo30, '30 bpm'],
-    2: [tempo60, '60 bpm'],
-    3: [tempo90, '90 bpm'],
-    4: [tempo120, '120 bpm'],
-    5: [tempo150, '150 bpm'],
+    1: [tempo15, '15 bpm'],
+    2: [tempo30, '30 bpm'],
+    3: [tempo60, '60 bpm'],
+    4: [tempo90, '90 bpm'],
+    5: [tempo120, '120 bpm'],
   },
   6: {
     1: [transposeDownTwoOctaves, '-2 octaves'],
