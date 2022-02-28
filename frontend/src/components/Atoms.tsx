@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { ColNum, Melodies, PadState } from '../types';
+import { Melodies, PadState } from '../types';
 import { combineMelodies } from '../utils/combineMelodies';
 import { patch, scale } from '../music/0_patch';
 import { runPatch } from '../utils/helpers';
@@ -21,9 +21,14 @@ const DEFAULT_TEMPO = 120.0;
 type Song = { [key: string]: PadState }
 type Mode = 'EXPLORE' | 'REC' | 'LISTEN' | '';
 
-type AtomsProps = { onMint: (state: PadState) => void; }
+type AtomsProps = {
+  onMint: (state: PadState) => void;
+  theState: PadState;
+  hideLabels: boolean;
+  isLocked: boolean;
+}
 
-const Atoms = ({ onMint }: AtomsProps) => {
+const Atoms = ({ onMint, theState, hideLabels, isLocked }: AtomsProps) => {
   const [voices, setVoices] = useState<Melodies>([]);
   const [max, setMax] = useState(MAX_LENGTH);
   const [isStopped, setIsStopped] = useState(true);
@@ -34,20 +39,9 @@ const Atoms = ({ onMint }: AtomsProps) => {
   const [state, setState] = useState<PadState>(DEFAULT_STATE);
 
   useEffect(() => {
-    const s = window.location.pathname.replace('/', '');
-    if (s.length !== 6) return;
 
-    const theState: PadState = {
-      1: +[s[0]] as ColNum,
-      2: +[s[1]] as ColNum,
-      3: +[s[2]] as ColNum,
-      4: +[s[3]] as ColNum,
-      5: +[s[4]] as ColNum,
-      6: +[s[5]] as ColNum
-    };
-
-    setState(theState)
-  }, []);
+    setState(theState);
+  }, [theState]);
 
   useEffect(() => {
     const { melodies, tempo: t } = runPatch(state, patch, scale);
@@ -146,6 +140,12 @@ const Atoms = ({ onMint }: AtomsProps) => {
     setState(old => ({ ...old, [rowIndex]: colIndex }))
   }
 
+  let tokenId = '';
+
+  Object.keys(state).forEach(key => {
+    tokenId += state[key];
+  });
+
   return <>
     <main>
       <div>
@@ -160,26 +160,39 @@ const Atoms = ({ onMint }: AtomsProps) => {
 
         <Pads
           state={state}
+          hideLabels={hideLabels}
           labels={{ 1: 'melody', 2: 'transformation', 3: 'rhythm change', 4: 'density', 5: 'tempo', 6: 'octave' }}
           cols={5}
           patch={patch}
           onUpdate={handlePadUpdate}
+          isLocked={isLocked}
         />
 
-        <div style={{ height: '100px' }}></div>
+        <div className="roww">
 
-        {isStopped &&
-          <ModeButtons
-            mode={mode}
-            onChangeMode={handleChangeMode}
-            onMint={() => onMint(state)}
-          />}
+          {isStopped &&
+            <ModeButtons
+              mode={mode}
+              onChangeMode={handleChangeMode}
+              onMint={() => onMint(state)}
+            />}
 
-        <div>
-          {!isStopped && <button
-            onClick={handleStop}
-            className="button2"
-          >STOP</button>}
+          <div>
+            {!isStopped &&
+              // <button
+              //   onClick={handleStop}
+              //   className="button2"
+              // >STOP</button>
+              <button className="paused" onClick={handleStop}></button>
+
+            }
+          </div>
+
+          <div>
+            <span className="token-text">#{tokenId}</span>
+          </div>
+
+
         </div>
       </div>
     </main>
@@ -206,12 +219,16 @@ type ModeButtonsProps = {
 
 const ModeButtons = ({ onChangeMode, mode, onMint }: ModeButtonsProps) => {
   return <div>
-    <button onClick={() => onChangeMode('EXPLORE')} className={'button2 ' + (mode === 'EXPLORE' ? 'button2-selected' : '')}>PLAY</button>
+    {/* <button onClick={() => onChangeMode('EXPLORE')} className={'button2 ' + (mode === 'EXPLORE' ? 'button2-selected' : '')}>PLAY</button> */}
     {/* <button onClick={() => onChangeMode('REC')} className={'button2 ' + (mode === 'REC' ? 'button2-selected' : '')}>REC</button>
     <button onClick={() => onChangeMode('LISTEN')} className={'button2 ' + (mode === 'LISTEN' ? 'button2-selected' : '')}>LISTEN</button> */}
 
-    <button onClick={onMint} className={'button2 button2-selected'}>MINT</button>
+    {/* <button onClick={onMint} className={'button2 button2-selected'}>MINT</button> */}
 
+    <button
+      onClick={() => onChangeMode('EXPLORE')}
+      className={'play-button ' + (mode === 'EXPLORE' ? 'button2-selected' : '')}
+    ></button>
 
   </div>
 }

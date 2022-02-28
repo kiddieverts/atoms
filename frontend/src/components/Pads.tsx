@@ -9,9 +9,11 @@ type Props = {
   onUpdate: (rowIndex: number, colIndex: number) => void;
   state: PadState;
   patch: Patch;
+  hideLabels: boolean;
+  isLocked: boolean;
 };
 
-const Pads = ({ state, cols, onUpdate, labels, patch }: Props) => {
+const Pads = ({ state, cols, onUpdate, labels, patch, hideLabels, isLocked }: Props) => {
   const theCols = fillArr(cols);
   const rows = Object.keys(state).map(r => +r);
   const getLabel = (i: number) => labels[i];
@@ -27,27 +29,33 @@ const Pads = ({ state, cols, onUpdate, labels, patch }: Props) => {
     setLabelValues(theLabelValues);
   }, [state]);
 
-  return <>
-    {rows.map(rowIdx =>
-      <div key={rowIdx} className="row">
-        <div className="cent">
-          <div style={{ fontSize: '14px' }}>
-            {getLabel(rowIdx)}<br />
-          </div>
-          <div>
-            {!!labelValues && labelValues[rowIdx - 1] && labelValues[rowIdx - 1].toLowerCase()}
+  const clzName = isLocked ? 'tile-static' : 'tile';
 
-          </div>
+  return <>
+    <div className="boxx">
+      {rows.map(rowIdx =>
+        <div key={rowIdx} className="row">
+          {!hideLabels && <div className="cent">
+            <div style={{ fontSize: '14px' }}>
+              {getLabel(rowIdx)}<br />
+            </div>
+            <div>
+              {!!labelValues && labelValues[rowIdx - 1] && labelValues[rowIdx - 1].toLowerCase()}
+            </div>
+          </div>}
+          {theCols.map(colIdx =>
+            <div
+              key={colIdx}
+              className={clzName + ' ' + (colIdx === state[rowIdx] ? 'selected' : '')}
+              onClick={() => {
+                if (isLocked) return;
+                onUpdate(rowIdx, colIdx);
+              }}
+            ></div>
+          )}
         </div>
-        {theCols.map(colIdx =>
-          <div
-            key={colIdx}
-            className={'tile ' + (colIdx === state[rowIdx] ? 'selected' : '')}
-            onClick={() => onUpdate(rowIdx, colIdx)}
-          ></div>
-        )}
-      </div>
-    )}
+      )}
+    </div>
   </>
 }
 
