@@ -52,13 +52,18 @@ const MidiPlayer = ({ isStopped, tempo, onUpdateCounter, melodies }) => {
   useEffect(() => {
     if (isStopped === true) {
       audioContext.suspend();
-      // audioContext.close();
-      window.clearTimeout(timerId);
+      audioContext.close();
+      // window.clearTimeout(timerId);
+
+      while (timerId--) {
+        window.clearTimeout(timerId); // will do nothing if no timeout with id is present
+      }
+
       reset();
+      audioContext = null;
+      audioContext = new AudioContext();
     } else {
       console.log('play');
-      // audioContext = null;
-      // audioContext = new AudioContext();
       audioContext.resume();
       scheduler();
     }
