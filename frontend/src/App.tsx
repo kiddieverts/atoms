@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 
-import { Melodies, PadState } from './types';
+import { ColNum, Melodies, PadState } from './types';
 import { combineMelodies } from './utils/combineMelodies';
 import { patch, scale } from './music/0_patch';
 import { runPatch } from './utils/helpers';
@@ -31,6 +31,22 @@ const App = () => {
   const [song, setSong] = useState<Song>({});
   const [tempo, setTempo] = useState(DEFAULT_TEMPO);
   const [state, setState] = useState<PadState>(DEFAULT_STATE);
+
+  useEffect(() => {
+    const s = window.location.pathname.replace('/', '');
+    if (s.length !== 6) return;
+
+    const theState: PadState = {
+      1: +[s[0]] as ColNum,
+      2: +[s[1]] as ColNum,
+      3: +[s[2]] as ColNum,
+      4: +[s[3]] as ColNum,
+      5: +[s[4]] as ColNum,
+      6: +[s[5]] as ColNum
+    };
+
+    setState(theState)
+  }, []);
 
   useEffect(() => {
     const { melodies, tempo: t } = runPatch(state, patch, scale);
