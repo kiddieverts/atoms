@@ -53,22 +53,32 @@ import { getAudioBufferFromFile, playSample } from '../utils/audio-utils';
 // const file11 = 'Church%20Steinway2%20P%20A%235'; // 70
 // const file12 = 'Church%20Steinway2%20P%20F6'; // 77
 
-const file1 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20c0'; // 0
-const file2 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20g0'; // 7
-const file3 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20d1'; // 14
-const file4 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20a1'; // 21
-const file5 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20e2'; // 28
-const file6 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20b2'; // 35
-const file7 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20f%233'; // 42
-const file8 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20c%234'; // 49
-const file9 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20g%234'; // 56
-const file10 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20d%235'; // 63
-const file11 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20a%235'; // 70
-const file12 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20f6'; // 77
+// const file1 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20c0'; // 0
+// const file2 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20g0'; // 7
+// const file3 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20d1'; // 14
+// const file4 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20a1'; // 21
+// const file5 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20e2'; // 28
+// const file6 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20b2'; // 35
+// const file7 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20f%233'; // 42
+// const file8 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20c%234'; // 49
+// const file9 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20g%234'; // 56
+// const file10 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20d%235'; // 63
+// const file11 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20a%235'; // 70
+// const file12 = 'Pianobook%20Steinway%20Kristiansand%20v1%20p%20f6'; // 77
 
-// Pianobook%20Steinway%20Kristiansand%20v1%20p%20
 
-// Church%20Steinway2%20P%20F6
+const file1 = 'c0'; // 0
+const file2 = 'g0'; // 7
+const file3 = 'd1'; // 14
+const file4 = 'a1'; // 21
+const file5 = 'e2'; // 28
+const file6 = 'b2'; // 35
+const file7 = 'f_3'; // 42
+const file8 = 'c_4'; // 49
+const file9 = 'g_4'; // 56
+const file10 = 'd_5'; // 63
+const file11 = 'a_5'; // 70
+const file12 = 'f6'; // 77
 
 const notes = {
   0: ['c0', file1],
@@ -200,7 +210,9 @@ export const useInstrument = (audioContext) => {
     for (var fileName of list) {
       const fName = fileName;
       getAudioBufferFromFile(audioContext, `/samples/${fileName}.wav`)
-        .then(s => setSamples(old => ({ ...old, [fName]: s })));
+        .then(s => {
+          setSamples(old => ({ ...old, [fName]: s }));
+        });
     }
   }, []);
 
