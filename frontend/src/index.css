@@ -40,9 +40,12 @@ main {
 }
 
 .button2-selected {
-  border-color: gray !important;
-   background-color: gray;
-  color: black !important;
+  border-color: rgb(249, 224, 0) !important;
+   /* background-color: gray; */
+   
+     /* background-color: rgb(249, 224, 0); */
+  /* color: black !important; */
+  color: rgb(249, 224, 0);
 }
 
 .row {
