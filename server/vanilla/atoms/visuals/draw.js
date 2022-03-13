@@ -94,9 +94,9 @@ export const draw = (numberOfFrames, i, beat, currentNotes, patch, w, h) => {
   // colorMode(HSB)
   // colorMode(HSB, 100, 100, 100);
 
-  console.log('>>', val, rnd)
+  // console.log('>>', val, rnd)
 
-  console.log('val')
+  // console.log('val')
 
   fill(a2, b2, c2, rnd * 70);
   noStroke();

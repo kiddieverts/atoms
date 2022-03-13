@@ -11,16 +11,16 @@ const TheApp = () => {
   const [contract, setContract] = useState(null);
   const [account, setAccount] = useState(null);
 
-  const handleMint = (state: PadState) => {
-    let str = '';
+  const handleMint = (id: string) => {
+    // let str = '';
 
-    Object.keys(state).forEach(key => {
-      const val = state[key];
-      str += val;
-    });
+    // Object.keys(state).forEach(key => {
+    //   const val = state[key];
+    //   str += val;
+    // });
 
-    const id = +str;
-    console.log('id', id);
+    // const id = +str;
+    // console.log('id', id);
 
     const value = Web3.utils.toWei('0.01', 'ether');
 
@@ -52,12 +52,31 @@ const TheApp = () => {
     }
   }, []);
 
-  return <Atoms
-    onMint={handleMint}
-    theState={{ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 }}
-    hideLabels={false}
-    isLocked={false}
-  />
+  const handleTheMint = () => {
+    const sr = window.location.search;
+    const params = new URLSearchParams(sr);
+    const id = params.get('id');
+
+    if (!!id) {
+      console.log('bang', id)
+      handleMint(id);
+    }
+  }
+
+  return <div>
+    <h1>Press mint...</h1>
+
+    <button onClick={handleTheMint}>
+      MINT
+    </button>
+  </div>
+
+  // return <Atoms
+  //   onMint={handleMint}
+  //   theState={{ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 }}
+  //   hideLabels={false}
+  //   isLocked={false}
+  // />
 }
 
 const App = () => {
