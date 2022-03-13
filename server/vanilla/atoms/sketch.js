@@ -1,63 +1,43 @@
-import { program } from './atoms.js';
+import { onDraw as playMusic, setupMusic } from './music-engine.js';
+import { getParams, idToState } from './utils/misc.js';
+import { setupVisuals } from './visuals.js';
+import { draw as doDraw } from './visuals/draw.js'
 
-let i = 0;
-let beat = 0;
-let bang = false;
-
-const NUMBER_OF_FRAMES = 10;
-const TOTAL_NUMBER_OF_BEATS = 3 * 4 * 32;; // 64 * 4 * 32; // 32 bars
+let patch = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3 };
+let loading = true;
 
 function setup() {
-  getAudioContext().suspend();
-  let mySynth = new p5.MonoSynth();
-  createCanvas(300, 300);
+  const { id } = getParams(window.location);
+  patch = idToState(id);
 
-  // This won't play until the context has resumed
-  mySynth.play('A6');
+  const ctx = getAudioContext();
+  setupMusic(ctx, patch, false).then(r => loading = false)
+  setupVisuals();
 }
 
 function draw() {
-  const audioContext = getAudioContext();
-  if (audioContext.state === 'running') {
-    increase();
+  if (loading) {
+    return;
   }
 
-  const tempo = getBpm(NUMBER_OF_FRAMES) + ' bpm';
-  const ms = getMs(NUMBER_OF_FRAMES) + ' ms';
-
-  if (!bang) {
-    // program();
-    bang = true;
+  const ctx = getAudioContext();
+  const { currentNotes, isStopped } = playMusic(ctx);
+  doDraw(currentNotes, patch, windowWidth, windowHeight);
+  if (isStopped) {
+    ctx.suspend();
   }
-
-  background(255, 500, 500);
-  textAlign(CENTER, CENTER);
-  text('tempo', 100, 100);
-  text(ms, 100, 120);
-  text(beat, width / 2, height / 2);
 }
 
 function mousePressed() {
-  if (getAudioContext().state === 'running') {
-    getAudioContext().suspend();
-  } else {
-    userStartAudio();
-  }
+  console.log('mousePressed');
+
+  // if (getAudioContext().state === 'running') {
+  //   // getAudioContext().suspend();
+  // } else {
+  //   userStartAudio();
+  // }
 }
 
-const getBpm = (x) => 60 / (60 / 3600 * x * 4);
-const getMs = (x) => 60 / 3600 * x * 4;
-
-const increase = () => {
-  if (i < NUMBER_OF_FRAMES) {
-    i = i + 1;
-  } else {
-    if (beat < TOTAL_NUMBER_OF_BEATS - 1) {
-      beat = beat + 1;
-    } else {
-      beat = 0;
-    }
-
-    i = 0;
-  }
-}
+window.setup = setup;
+window.draw = draw;
+window.mousePressed = mousePressed;

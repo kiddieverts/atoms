@@ -20,7 +20,7 @@ let diff = 0;
 let incr = 0;
 let first = false;
 
-export const draw = (numberOfFrames, i, beat, currentNotes, patch, w, h) => {
+export const draw = (currentNotes, patch, w, h) => {
   const [pitch1, noteLength1] = currentNotes[0];
   const [pitch2, noteLength2] = currentNotes[1] || [0, 0];
   const [pitch3, noteLength3] = currentNotes[2] || [0, 0];
