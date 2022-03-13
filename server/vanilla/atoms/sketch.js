@@ -5,7 +5,7 @@ let beat = 0;
 let bang = false;
 
 const NUMBER_OF_FRAMES = 10;
-const TOTAL_NUMBER_OF_BEATS = 16; // 64 * 4 * 32; // 32 bars
+const TOTAL_NUMBER_OF_BEATS = 3 * 4 * 32;; // 64 * 4 * 32; // 32 bars
 
 function setup() {
   getAudioContext().suspend();
