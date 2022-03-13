@@ -10,28 +10,30 @@ let n3 = 0;
 let n4 = 0;
 let n5 = 0;
 
-let cnt = 0;
+let x = 0;
+let y = 0;
 
-let btwrapped = 0;
-let bt = 0;
+let x2 = 0;
+let y2 = 0;
 
-let x_coordinate = 0;
-let plot_x = 0;
-let x_noise = 0;
+let diff = 0;
+let incr = 0;
+let first = false;
 
-export const draw = (numberOfFrames, i, beat, currentNotes, patch) => {
+export const draw = (numberOfFrames, i, beat, currentNotes, patch, w, h) => {
   const [pitch1, noteLength1] = currentNotes[0];
   const [pitch2, noteLength2] = currentNotes[1] || [0, 0];
   const [pitch3, noteLength3] = currentNotes[2] || [0, 0];
   const [pitch4, noteLength4] = currentNotes[3] || [0, 0];
   const [pitch5, noteLength5] = currentNotes[4] || [0, 0];
 
-  const tempo = getBpm(numberOfFrames) + ' bpm';
-
-  const voices = +patch['4'];
-
-  let bb = color('green');
-
+  if (first === false) {
+    x = w / 2;
+    y = h / 2;
+    first = true
+    x2 = w / 2;
+    y2 = h / 2;
+  }
 
   if (!!pitch1) {
     p1 = pitch1;
@@ -57,114 +59,71 @@ export const draw = (numberOfFrames, i, beat, currentNotes, patch) => {
     p5 = pitch5;
     n5 = noteLength5;
   }
-  // const p1 = pitch1 || '';
-  // const p2 = pitch2 || '';
-  // const p3 = pitch3 || '';
-  // const p4 = pitch4 || '';
-  // const p5 = pitch5 || '';
 
-  // const n1 = noteLength1 || '';
+  const rnd = jsf32(incr, incr + 1, p1 + 20, p1 + 3)();
+  const seed = jsf32(patch['1'], patch['2'], patch['3'], patch['4'])();
+  const s1 = seed.toString().substring(6, 9);
+  const val = ((rnd * 20) - 10) / 2;
+  const sd = 100 / s1;
 
-  // if (cnt > 120) {
-  //   background(0);
-  //   cnt = 0;
-  // }
+  // Voice 1
+  y = height - ((height * (p1 / 128))) * 2 - ((10 * seed) / sin(-val));
 
-  cnt = cnt + 1;
+  const a = 255 * rnd;
+  const b = 100 * sd;
+  const c = 255 * sd;
 
+  colorMode(RGB)
 
-  if (beat !== bt) {
-    if (btwrapped < 8) {
-      btwrapped++;
-    } else {
-      btwrapped = 0;
-    }
-  }
+  fill(a, b, c, 30 * seed);
+  noStroke();
+  ellipse(diff % 0 ? x - 150 : x + 15, y, 10, diff % 2 ? 6 : 10);
+  x = x < 0
+    ? w / 2
+    : x + val;
 
-  bt = beat;
+  // Voice 2
+  y2 = (height - ((height * (p2 / 128))) * 1.8) * 1 - (1 / sin(-val)); // + ((val > 0 ? cos(-1) : 0)); //  * (1 / cos(val)) // - ((10 * seed) / cos(-val));
 
+  // console.log('val', val)
 
+  const a2 = 200 * rnd;
+  const b2 = 255 * sd;
+  const c2 = 150 * sd
 
-  const bla = (xx) => height - (height * (xx / 128)) + 0// (btwrapped % 2) * 2 + (p1 / 16)
+  // colorMode(HSB)
+  // colorMode(HSB, 100, 100, 100);
 
-  const nl = (xx) => 100 - xx;
+  console.log('>>', val, rnd)
 
-  const gaga = (xx) => xx // + btwrapped * 10 + p1;
+  console.log('val')
 
-  const gaga2 = (xx) => width - (100 - xx);
+  fill(a2, b2, c2, rnd * 70);
+  noStroke();
+  ellipse(x2, y2 + rnd * 50, rnd < 0.5 ? 12 : 6);
+  ellipse(x2, y2 + rnd * 100, rnd < 0.5 ? 10 : 5);
 
-  const breidd = (xx) => xx / btwrapped / 2 + 50;
-
-  // ellipse(p1, p2, n1 + 100);
-
-  color('#f9e000');
-
-  x_noise = noise(x_coordinate) * 100;
-
-  // Plot the point with random noise
-  strokeWeight(3);
-
-  // Use color() function
-
-
-  if (!!p1) {
-    let a = color('#f9e000');
-    fill(a);
-    rect(gaga(0), bla(p1), breidd(p1), nl(n1));
-    point(100, 200);
-  }
-
-  if (!!p2 && voices > 1) {
-    let b = color('green');
-    fill(b);
-    rect(gaga(50), bla(p2), breidd(p2), nl(n2));
-  }
-
-  if (!!p3 && voices > 2) {
-    let c = color('red');
-    fill(c);
-    rect(gaga(100), bla(p3), breidd(p3), nl(n3));
-  }
-
-  if (!!p4 && voices > 3) {
-    let c = color('#f9e000');
-    fill(c);
-    rect(gaga(150), bla(p4), breidd(p4), nl(n4));
-  }
-
-  if (!!p5 && voices > 4) {
-    let c = color('#f9e000');
-    fill(c);
-    rect(gaga(200), bla(p5), breidd(p5), nl(n5));
-  }
+  x2 = x2 < 0
+    ? w / 2
+    : x2 - (val * 1) * 1
 
 
+  //
 
-
-
-  // background(255, 1000, 1000);
-  // textAlign(CENTER, CENTER);
-  // text('>> ' + beat, 100, 240);
-
-  // text(p4 || '', 10, 140);
-  // text(height || '', 40, 140);
-
-  // text(p1 || '', 10, 160);
-  // text(p2 || '', 10, 180);
-  // text(p3 || '', 10, 200);
-  // text(p4 || '', 10, 220);
-  // text(p5 || '', 10, 240);
-
-  // text('x' + voices + '..' + (voices > 1), 10, 200);
-  // text(p4, 100, 200);
-  // text(p5, 100, 220);
-  // text(i, 140, 260);
-
-
-  // text(tempo, 140, 280)
-
-  // text(numberOfFrames + 'frm', 300, 300)
+  incr++;
 }
 
 
-const getBpm = (x) => 60 / (60 / 3600 * x * 4);
+
+
+const jsf32 = (a, b, c, d) => {
+  return () => {
+    a |= 0; b |= 0; c |= 0; d |= 0;
+    var t = a - (b << 27 | b >>> 5) | 0;
+    a = b ^ (c << 17 | c >>> 15);
+    b = c + d | 0;
+    c = d + t | 0;
+    d = a + t | 0;
+    return (d >>> 0) / 4294967296;
+  }
+}

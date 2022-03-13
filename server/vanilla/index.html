@@ -64,7 +64,6 @@
 
       const loc = window.location;
       if (loc.search.length === 7) {
-        console.log('>>', loc.search.length)
         const daId = loc.search.substring(1, loc.search.length);
         const one = +daId[0];
         const two = +daId[1];
@@ -77,16 +76,19 @@
 
         st = { 1: one, 2: two, 3: three, 4: four, 5: five, 6: six };
         updateAllState(st);
-
       }
-
-
 
       const ctx = getAudioContext();
       ctx.suspend();
-      const cv = createCanvas(480, 480);
 
-      cv.position(500, 20)
+      const cv = createCanvas(windowWidth, windowHeight);
+
+      background(0)
+
+      // drawBackground();
+      // setupPosition();
+
+      cv.position(0, 0);
 
       window.setupInstrument(ctx).then(smpls => {
         samples = smpls;
@@ -131,6 +133,11 @@
       el.classList.add("selected");
     }
 
+    // function setupPosition () {
+    //     x = p.windowWidth / 2;
+    //     y = p.windowHeight / 2;
+    //   };
+
     function draw() {
       if (!loaded) {
         return;
@@ -145,7 +152,7 @@
           playNow(audioContext, currentNotes);
         }
 
-        window.doDraw(NUMBER_OF_FRAMES, i, tmp, currentNotes, state);
+        window.doDraw(NUMBER_OF_FRAMES, i, tmp, currentNotes, state, windowWidth, windowHeight);
 
         increase();
       }
@@ -183,7 +190,7 @@
         }
         else {
           getAudioContext().suspend();
-          // saveFrames('out', 'png', 1, 1);
+          saveFrames('out', 'png', 1, 1);
         }
         // else {
         //   beat = 0;
@@ -257,7 +264,9 @@
     </div>
   </div>
 
-  <div style="font-size: 18px;" id="btn">hide/show</div>
+  <div style="display: none">
+    <div style="font-size: 18px;" id="btn">hide/show</div>
+  </div>
 
 </body>
 
