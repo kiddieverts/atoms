@@ -46,7 +46,7 @@ export const onDraw = (audioContext) => {
     }
 
     const isStopped = increase();
-    return { currentNotes, patch: PATCH, isStopped }
+    return { currentNotes, patch: PATCH, isStopped, voices: VOICES }
   }
 
   return getEmpty();

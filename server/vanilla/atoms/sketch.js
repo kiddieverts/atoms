@@ -18,14 +18,35 @@ function setup() {
   setupVisuals();
 }
 
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  // drawBackground();
+  // setupPosition();
+};
+
+// p.setupPosition = () => {
+//   x = p.windowWidth / 2;
+//   y = p.windowHeight / 2;
+// };
+
+// p.windowResized = () => {
+//   p.resizeCanvas(p.windowWidth, p.windowHeight);
+//   p.drawBackground();
+//   p.setupPosition();
+// };
+
+// p.drawBackground = () => {
+//   p.background(0);
+// };
+
+
 function draw() {
   if (loading || getAudioContext().state === 'suspended') {
     return;
   }
 
-
-  const { currentNotes, isStopped } = playMusic(getAudioContext());
-  doDraw(currentNotes, patch, windowWidth, windowHeight);
+  const { currentNotes, isStopped, voices } = playMusic(getAudioContext());
+  doDraw(currentNotes, patch, windowWidth, windowHeight, voices);
   if (isStopped) {
     ctx.suspend();
   }
@@ -40,5 +61,6 @@ function mouseClicked() {
 
 window.setup = setup;
 window.draw = draw;
+window.windowResized = windowResized;
 
 window.mouseClicked = mouseClicked;
