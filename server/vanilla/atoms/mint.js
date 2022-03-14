@@ -12,9 +12,7 @@ function setup() {
 }
 
 function draw() {
-  if (loading) {
-    return;
-  }
+  if (loading) return;
 
   const ctx = getAudioContext();
   playMusic(ctx);
@@ -66,10 +64,6 @@ const updateCss = (id) => {
   tokenEl.addEventListener(('click'), () => {
     window.location = `/?id=${tokenId}`
   });
-
-  // const node = document.createElement("a");
-  // x.appendChild(node);
-  // x.appendChild = `<a href="/?id=${tokenId}>#${tokenId}</a>`;
 }
 
 const updateState = (num) => {

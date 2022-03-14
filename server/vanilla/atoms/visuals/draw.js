@@ -85,18 +85,11 @@ export const draw = (currentNotes, patch, w, h) => {
   // Voice 2
   y2 = (height - ((height * (p2 / 128))) * 1.8) * 1 - (1 / sin(-val)); // + ((val > 0 ? cos(-1) : 0)); //  * (1 / cos(val)) // - ((10 * seed) / cos(-val));
 
-  // console.log('val', val)
 
   const a2 = 200 * rnd;
   const b2 = 255 * sd;
   const c2 = 150 * sd
 
-  // colorMode(HSB)
-  // colorMode(HSB, 100, 100, 100);
-
-  // console.log('>>', val, rnd)
-
-  // console.log('val')
 
   fill(a2, b2, c2, rnd * 70);
   noStroke();
@@ -107,14 +100,8 @@ export const draw = (currentNotes, patch, w, h) => {
     ? w / 2
     : x2 - (val * 1) * 1
 
-
-  //
-
   incr++;
 }
-
-
-
 
 const jsf32 = (a, b, c, d) => {
   return () => {

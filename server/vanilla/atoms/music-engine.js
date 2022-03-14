@@ -1,4 +1,4 @@
-import { program as generateVoices } from './atoms.js';
+import { generateVoices } from './utils/generateVoices.js';
 import { setupInstrument, play as playFn } from './instrument.js';
 import { TOTAL_NUMBER_OF_TICKS as TOTAL_NUMBER_OF_BEATS } from './constant.js';
 
@@ -9,7 +9,7 @@ let SAMPLES = undefined;
 let LOADED = false;
 let TMP = -1;
 let PATCH = { 1: 1, 2: 1, 3: 1, 4: 3, 5: 5, 6: 3 };
-let LOOP = true;
+let IS_LOOPED = true;
 let NUMBER_OF_FRAMES = 10; // 90 bpm
 
 export const updatePatchRow = (row, col) => {
@@ -21,25 +21,16 @@ export const updatePatchRow = (row, col) => {
   return ns;
 }
 
-const updateWholePatch = (ns) => {
-  const { voices: vc, tempo: numberOfFrames } = generateVoices(ns['1'], ns['2'], ns['3'], ns['4'], ns['5'], ns['6']);
-  VOICES = vc;
-  PATCH = ns;
-  NUMBER_OF_FRAMES = numberOfFrames;
-}
-
-export const setupMusic = (ctx, patch, loop) => {
+export const setupMusic = (ctx, patch, isLooped) => {
   updateWholePatch(patch);
 
-  LOOP = loop;
+  IS_LOOPED = isLooped;
 
   return setupInstrument(ctx).then(smpls => {
     SAMPLES = smpls;
     LOADED = true;
   });
 }
-
-const getEmpty = () => ({ currentNotes: [], patch: PATCH });
 
 export const onDraw = (audioContext) => {
   if (!LOADED) {
@@ -61,6 +52,15 @@ export const onDraw = (audioContext) => {
   return getEmpty();
 }
 
+const getEmpty = () => ({ currentNotes: [], patch: PATCH });
+
+const updateWholePatch = (ns) => {
+  const { voices: vc, tempo: numberOfFrames } = generateVoices(ns['1'], ns['2'], ns['3'], ns['4'], ns['5'], ns['6']);
+  VOICES = vc;
+  PATCH = ns;
+  NUMBER_OF_FRAMES = numberOfFrames;
+}
+
 const playNow = (audioContext, currentNotes) => {
   currentNotes.forEach(currentNote => {
     const [pitch, noteLength] = currentNote;
@@ -69,7 +69,6 @@ const playNow = (audioContext, currentNotes) => {
     if (!!pitch) {
       const t = audioContext.currentTime;
       playFn(audioContext, SAMPLES, pitch, t, dur);
-      // export const playSample = (audioContext, audioBuffer, time, playbackRate = 1, release = 0.3) => {
     }
   });
 }
@@ -82,13 +81,12 @@ const increase = () => {
       BEAT = BEAT + 1;
     }
     else {
-      if (LOOP) {
+      if (IS_LOOPED) {
         BEAT = 0;
         return false;
       } else {
         // saveFrames('item', 'png', 1, 1);
         // getAudioContext().suspend();
-        // beat = 0;
         return true;
       }
     }
@@ -97,11 +95,3 @@ const increase = () => {
   }
 }
 
-
-// function mousePressed() {
-//   if (getAudioContext().state === 'running') {
-//     // getAudioContext().suspend();
-//   } else {
-//     userStartAudio();
-//   }
-// }

@@ -1,0 +1,38 @@
+import { patch, scale } from '../music/0_patch.js';
+import { combineMelodies } from './combineMelodies.js';
+
+export const generateVoices = (one, two, three, four, five, six) => {
+  const state = {
+    1: one,
+    2: two,
+    3: three,
+    4: four,
+    5: five,
+    6: six
+  }
+
+  const { melodies, tempo } = runPatch(state, patch, scale);
+  const voices = combineMelodies(melodies);
+
+  return { voices, tempo };
+}
+
+const runPatch = (state, patch, scale) => {
+  const a = state[1];
+  const b = state[2];
+  const c = state[3];
+  const d = state[4];
+  const e = state[5];
+  const f = state[6];
+
+  const fnOne = patch[1][a][0];
+  const fnTwo = patch[2][b][0];
+  const fnThree = patch[3][c][0];
+  const fnFour = patch[4][d][0];
+  const fnFive = patch[5][e][0];
+  const fnSix = patch[6][f][0];
+  const startWith = fnOne(scale, 120.0);
+
+  return fnSix(fnFive(fnFour(fnThree(fnTwo(startWith)))));
+}
+
