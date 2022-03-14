@@ -9,12 +9,20 @@ let loading = true;
 function setup() {
   patch = idToState(getId(window.location));
   const isLooped = false;
-  setupMusic(getAudioContext(), patch, isLooped).then(() => loading = false);
+  setupMusic(getAudioContext(), patch, isLooped)
+    .then(() => {
+      loading = false;
+      getAudioContext().suspend();
+
+    });
   setupVisuals();
 }
 
 function draw() {
-  if (loading) return;
+  if (loading || getAudioContext().state === 'suspended') {
+    return;
+  }
+
 
   const { currentNotes, isStopped } = playMusic(getAudioContext());
   doDraw(currentNotes, patch, windowWidth, windowHeight);
@@ -23,5 +31,14 @@ function draw() {
   }
 }
 
+function mouseClicked() {
+  const ctx = getAudioContext();
+  ctx.resume();
+  const el = document.getElementById('play-btn');
+  el.style.display = 'none';
+}
+
 window.setup = setup;
 window.draw = draw;
+
+window.mouseClicked = mouseClicked;

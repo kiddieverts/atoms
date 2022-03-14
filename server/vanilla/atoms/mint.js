@@ -79,5 +79,10 @@ const patchToString = (p) => {
   return str;
 }
 
+function mouseClicked() {
+  getAudioContext().resume();
+}
+
 window.setup = setup;
 window.draw = draw;
+window.mouseClicked = mouseClicked;
