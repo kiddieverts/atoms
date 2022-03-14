@@ -15,8 +15,6 @@ export const program = (one, two, three, four, five, six) => {
   const voices = combineMelodies(melodies);
 
   return { voices, tempo };
-
-  // console.log(voices, tempo);
 }
 
 const runPatch = (state, patch, scale) => {

@@ -12,7 +12,16 @@ let PATCH = { 1: 1, 2: 1, 3: 1, 4: 3, 5: 5, 6: 3 };
 let LOOP = true;
 let NUMBER_OF_FRAMES = 10; // 90 bpm
 
-const updateAllState = (ns) => {
+export const updatePatchRow = (row, col) => {
+  const ns = { ...PATCH, [row]: col };
+  const { voices: vc, tempo: numberOfFrames } = generateVoices(ns['1'], ns['2'], ns['3'], ns['4'], ns['5'], ns['6']);
+  VOICES = vc;
+  PATCH = ns;
+  NUMBER_OF_FRAMES = numberOfFrames;
+  return ns;
+}
+
+const updateWholePatch = (ns) => {
   const { voices: vc, tempo: numberOfFrames } = generateVoices(ns['1'], ns['2'], ns['3'], ns['4'], ns['5'], ns['6']);
   VOICES = vc;
   PATCH = ns;
@@ -20,7 +29,7 @@ const updateAllState = (ns) => {
 }
 
 export const setupMusic = (ctx, patch, loop) => {
-  updateAllState(patch);
+  updateWholePatch(patch);
 
   LOOP = loop;
 
