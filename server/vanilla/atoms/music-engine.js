@@ -1,5 +1,6 @@
 import { generateVoices } from './utils/generateVoices.js';
 import { TOTAL_NUMBER_OF_TICKS as TOTAL_NUMBER_OF_BEATS } from './constant.js';
+import { play as playFn, setupInstrument as setupInstrumentFn } from './instrument.js';
 
 let CNT = 0;
 let BEAT = 0;
@@ -11,18 +12,18 @@ let STATE = { 1: 1, 2: 1, 3: 1, 4: 3, 5: 5, 6: 3 };
 let IS_LOOPED = true;
 let NUMBER_OF_FRAMES = 10; // 90 bpm
 let PATCH = undefined;
-let PLAY_FN = undefined;
 let SCALE = undefined;
+let SAMPLE_FILES = undefined;
 
 export const setupMusic = (audioContext, settings, state, isLooped) => {
   IS_LOOPED = isLooped;
   PATCH = settings.patch;
   SCALE = settings.scale;
-  PLAY_FN = settings.playFn;
+  SAMPLE_FILES = settings.sampleFiles;
 
   updateWholePatch(state);
 
-  return settings.setupInstrumentFn(audioContext).then(smpls => {
+  return setupInstrumentFn(audioContext, settings.sampleFiles).then(smpls => {
     SAMPLES = smpls;
     LOADED = true;
   });
@@ -47,7 +48,7 @@ export const onDraw = (audioContext) => {
 
     if (BEAT !== TMP) {
       TMP = BEAT;
-      playNow(audioContext, currentNotes);
+      playNow(audioContext, currentNotes, SAMPLE_FILES);
     }
 
     const isStopped = increase();
@@ -66,15 +67,14 @@ const updateWholePatch = (ns) => {
   NUMBER_OF_FRAMES = numberOfFrames;
 }
 
-const playNow = (audioContext, currentNotes) => {
+const playNow = (audioContext, currentNotes, sampleFiles) => {
   currentNotes.forEach(currentNote => {
     const [pitch, noteLength] = currentNote;
     const dur = 0.3;
 
     if (!!pitch) {
       const t = audioContext.currentTime;
-      const playFn = PLAY_FN;
-      playFn(audioContext, SAMPLES, pitch, t, dur);
+      playFn(audioContext, SAMPLES, pitch, t, dur, sampleFiles);
     }
   });
 }
