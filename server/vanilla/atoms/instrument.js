@@ -104,7 +104,7 @@ export const setupInstrument = (audioContext, sampleFiles) => {
   return new Promise((res, rej) => {
     for (var fileName of list) {
       const fName = fileName;
-      getAudioBufferFromFile(audioContext, `/samples/${fileName}.wav`)
+      getAudioBufferFromFile(audioContext, `/collection/samples/${fileName}.wav`)
         .then(s => {
           samples = { ...samples, [fName]: s };
           if (Object.keys(samples).length === list.length) {
