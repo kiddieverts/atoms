@@ -1,26 +1,27 @@
 import { onDraw as playMusic, setupMusic, updatePatchRow } from './music-engine.js';
 import { MINT_PATH } from './constant.js';
+import { settings } from './collection';
 
-let patch = { 1: 2, 2: 1, 3: 3, 4: 2, 5: 3, 6: 1 };
-let loading = true;
+let STATE = { 1: 2, 2: 1, 3: 3, 4: 2, 5: 3, 6: 1 };
+let IS_LOADING = true;
 
 function setup() {
   const ctx = getAudioContext();
-  setupMusic(ctx, patch, true).then(r => loading = false)
+  setupMusic(ctx, settings, STATE, true).then(r => IS_LOADING = false);
   addClickListeners();
   initializePads();
 }
 
 function draw() {
-  if (loading) return;
+  if (IS_LOADING) return;
 
   const ctx = getAudioContext();
   playMusic(ctx);
 }
 
 const initializePads = () => {
-  Object.keys(patch).forEach(row => {
-    const col = patch[row];
+  Object.keys(STATE).forEach(row => {
+    const col = STATE[row];
     updateCss(row + col);
   });
 }
@@ -39,7 +40,7 @@ const addClickListeners = () => {
   const mintBtn = document.getElementById('mint');
 
   mintBtn.addEventListener('click', () => {
-    const str = patchToString(patch);
+    const str = patchToString(STATE);
     window.location = MINT_PATH + str;
   });
 }
@@ -57,7 +58,7 @@ const updateCss = (id) => {
   el.classList.add('selected');
 
   const tokenEl = document.getElementById('token-id');
-  const tokenId = patchToString(patch);
+  const tokenId = patchToString(STATE);
 
   tokenEl.innerHTML = `#${tokenId}`;
 
@@ -70,7 +71,7 @@ const updateState = (num) => {
   const row = num[0];
   const col = +num[1];
 
-  patch = updatePatchRow(row, col);
+  STATE = updatePatchRow(row, col);
 }
 
 const patchToString = (p) => {

@@ -8,8 +8,9 @@ let IS_LOADING = true;
 
 function setup() {
   STATE = idToState(getId(window.location));
-  getAudioContext().suspend();
-  setupMusic(getAudioContext(), settings, STATE, false).then(() => IS_LOADING = false);
+  const ctx = getAudioContext();
+  ctx.suspend();
+  setupMusic(ctx, settings, STATE, false).then(() => IS_LOADING = false);
   setupVisuals();
 }
 
