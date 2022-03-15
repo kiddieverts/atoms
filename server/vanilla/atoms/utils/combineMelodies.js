@@ -1,5 +1,5 @@
 
-import { unpack } from './packing.js';
+import { unpack } from '../../lib/utils/packing.js';
 import { TOTAL_NUMBER_OF_TICKS } from '../constant.js'
 
 export const combineMelodies = (melodies) => {
@@ -23,7 +23,6 @@ export const combineMelodies = (melodies) => {
 
 const calculateVoice = (m, melodyId) => {
   let nextStep = {}
-  // let playingCount = {}
   const timeline = [];
 
   const [pitches, rhythm] = doUnpack(m);
@@ -37,14 +36,7 @@ const calculateVoice = (m, melodyId) => {
         ? 0
         : next + 1;
 
-    // const pc = next === rhythm.length - 1
-    //   ? !!playingCount[melodyId]
-    //     ? playingCount[melodyId] + 1
-    //     : 1
-    //   : playingCount[melodyId];
-
     nextStep[melodyId] = ns;
-    // playingCount[melodyId] = pc;
 
     timeline.push([pitches[ns - 1], rhythm[ns - 1]]);
   }

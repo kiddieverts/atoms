@@ -1,7 +1,7 @@
 import { onDraw as playMusic, setupMusic } from './music-engine.js';
 import { getId, idToState } from './utils/misc.js';
 import { setupVisuals } from './visuals/visuals.js';
-import { settings, drawFn } from './collection.js';
+import { settings, drawFn } from '../collection/index.js';
 
 let STATE = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3 };
 let IS_LOADING = true;

@@ -1,8 +1,3 @@
-export const applyToAllVoices = ({ melodies: melo, scale, tempo }, fn) => {
-    const melodies = melo.map(me => fn(me, scale));
-    return { melodies, scale, tempo }
-}
-
 export const runPatch = (state, patch, scale) => {
     const a = state[1];
     const b = state[2];

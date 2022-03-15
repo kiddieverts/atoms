@@ -1,4 +1,4 @@
-import { applyToAllVoices } from '../utils/helpers.js';
+import { applyToAllVoices } from '../../../lib/utils/applyToAllVoices.js';
 
 const halveValue = (m) => {
   const final = [];

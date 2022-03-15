@@ -1,6 +1,6 @@
 import { onDraw as playMusic, setupMusic, updatePatchRow } from './music-engine.js';
 import { MINT_PATH } from './constant.js';
-import { settings } from './collection';
+import { settings } from '../collection/index.js';
 
 let STATE = { 1: 2, 2: 1, 3: 3, 4: 2, 5: 3, 6: 1 };
 let IS_LOADING = true;

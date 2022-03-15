@@ -1,5 +1,4 @@
-import { noteNumberToNoteName } from '../utils/noteNumberToNoteName.js';
-import { applyToAllVoices } from '../utils/helpers.js';
+import { applyToAllVoices } from '../../../lib/utils/applyToAllVoices.js';
 
 /* Retrograde */
 export const retrograde = (m) => m.reverse();

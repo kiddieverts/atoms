@@ -1,4 +1,4 @@
-import { getAudioBufferFromFile, playSample } from './utils/audio-utils.js';
+import { getAudioBufferFromFile, playSample } from './audio-utils.js';
 
 const file1 = 'c0'; // 0
 const file2 = 'g0'; // 7

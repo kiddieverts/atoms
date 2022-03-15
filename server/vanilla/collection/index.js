@@ -1,4 +1,4 @@
-import { setupInstrument as setupInstrumentFn, play as playFn } from './instrument.js';
+import { setupInstrument as setupInstrumentFn, play as playFn } from './instrument/instrument.js';
 import { patch, scale } from './music/0_patch.js';
 import { draw as drawFn } from './visuals/draw.js';
 
