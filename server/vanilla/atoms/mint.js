@@ -6,17 +6,15 @@ let STATE = { 1: 2, 2: 1, 3: 3, 4: 2, 5: 3, 6: 1 };
 let IS_LOADING = true;
 
 function setup() {
-  const ctx = getAudioContext();
-  setupMusic(ctx, settings, STATE, true).then(r => IS_LOADING = false);
+  const audioContext = getAudioContext();
+  setupMusic(audioContext, settings, STATE, true).then(r => IS_LOADING = false);
   addClickListeners();
   initializePads();
 }
 
 function draw() {
   if (IS_LOADING) return;
-
-  const ctx = getAudioContext();
-  playMusic(ctx);
+  playMusic(getAudioContext());
 }
 
 const initializePads = () => {

@@ -3,8 +3,9 @@ import { calculateVoiceB, calculateVoiceC, calculateVoiceD, calculateVoiceE } fr
 import { getMelodyA, getMelodyB, getMelodyC, getMelodyD, getMelodyE } from './1_melody-picker.js';
 import { tempo90, tempo120, tempo30, tempo60, tempo15 } from './4_tempo-changes.js';
 import { transposeDownOneOctave, transposeDownTwoOctaves, transposeUpOneOctave, transposeUpTwoOctaves, transposeZero } from './5_transpose.js';
-import { doNothing } from '../utils/do-nothing.js';
 import { doHalveValue, doEveryEightNoteIsTurnedIntoDottedEightNote, doEveryOtherNoteIsHalved, doNotesAreDoubled } from './3_rhythm-transformations.js';
+
+const doNothing = (m) => m;
 
 export const patch = {
   1: {

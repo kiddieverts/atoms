@@ -1,6 +1,6 @@
 import { onDraw as playMusic, setupMusic } from './music-engine.js';
 import { getId, idToState } from './utils/misc.js';
-import { setupVisuals } from './visuals/visuals.js';
+import { setupVisuals } from './visuals.js';
 import { settings, drawFn } from '../collection/index.js';
 
 let STATE = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3 };
@@ -8,9 +8,9 @@ let IS_LOADING = true;
 
 function setup() {
   STATE = idToState(getId(window.location));
-  const ctx = getAudioContext();
-  ctx.suspend();
-  setupMusic(ctx, settings, STATE, false).then(() => IS_LOADING = false);
+  const audioContext = getAudioContext();
+  audioContext.suspend();
+  setupMusic(audioContext, settings, STATE, false).then(() => IS_LOADING = false);
   setupVisuals();
 }
 
@@ -31,8 +31,8 @@ function draw() {
 }
 
 function mouseClicked() {
-  const ctx = getAudioContext();
-  ctx.resume();
+  const audioContext = getAudioContext();
+  audioContext.resume();
   const el = document.getElementById('play-btn');
   el.style.display = 'none';
 }
@@ -40,5 +40,4 @@ function mouseClicked() {
 window.setup = setup;
 window.draw = draw;
 window.windowResized = windowResized;
-
 window.mouseClicked = mouseClicked;
