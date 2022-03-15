@@ -19,7 +19,8 @@ const sampleFiles = [
 export const settings = {
   patch,
   scale,
-  sampleFiles
+  sampleFiles,
+  drawFn,
 }
 
 export { drawFn };

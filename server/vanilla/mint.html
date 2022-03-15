@@ -14,7 +14,26 @@
     integrity="sha512-U2sgwrFhl+Tgx9iGH9h5Ba2WyIjyCes+D0prtIFw3a0V+/fkaeL5Cd/VjyPHno9kUPE1rnNhBGTyvtZsfJp0xg=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  <script src="./atoms/mint.js" type="module"></script>
+  <script type="module">
+    import sketch from './atoms/sketch.js';
+    import { settings } from './collection/index.js';
+    import { getId, idToState } from './atoms/utils/misc.js';
+    import mint from './atoms/mint.js';
+
+    const STATE = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 };
+    const { setup, draw, windowResized, mouseClicked, onlyMusic, update } = sketch(settings, STATE, false);
+    const { initializePads, addClickListeners, onUpdateState } = mint(STATE, update);
+
+    window.setup = setup;
+    window.draw = onlyMusic;
+    window.windowResized = windowResized;
+    window.mouseClicked = mouseClicked;
+
+    window.addEventListener('load', () => {
+      initializePads();
+      addClickListeners();
+    });
+  </script>
 </head>
 
 <body>
