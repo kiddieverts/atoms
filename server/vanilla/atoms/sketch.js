@@ -26,7 +26,7 @@ function draw() {
   const { currentNotes, isStopped, voices } = playMusic(getAudioContext());
   drawFn(currentNotes, STATE, windowWidth, windowHeight, voices);
   if (isStopped) {
-    ctx.suspend();
+    getAudioContext().suspend();
   }
 }
 

@@ -80,7 +80,7 @@ const drawVoice1 = (v1, vMin, vMax, globX, globY) => {
   globX = random(xMiddle - 500, xMiddle + 500);
 
 
-  fill(a, b, c, 10);
+  fill(a, b, c, 40);
   noStroke();
   rect(globX, globY, 60, 60);
 }

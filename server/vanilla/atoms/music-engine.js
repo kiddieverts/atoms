@@ -31,7 +31,7 @@ export const setupMusic = (audioContext, settings, state, isLooped) => {
 
 export const updatePatchRow = (row, col) => {
   const ns = { ...STATE, [row]: col };
-  const { voices: vc, tempo: numberOfFrames } = generateVoices(PATCH, SCALE, STATE);
+  const { voices: vc, tempo: numberOfFrames } = generateVoices(PATCH, SCALE, ns);
   VOICES = vc;
   STATE = ns;
   NUMBER_OF_FRAMES = numberOfFrames;
@@ -91,7 +91,9 @@ const increase = () => {
         BEAT = 0;
         return false;
       } else {
-        // saveFrames('item', 'png', 1, 1);
+        saveFrames('item', 'png', 1, 1, (data) => {
+          console.log('save', data[0].imageData)
+        });
         // getAudioContext().suspend();
         return true;
       }
