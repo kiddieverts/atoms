@@ -13,32 +13,13 @@ function setup() {
     .then(() => {
       loading = false;
       getAudioContext().suspend();
-
     });
   setupVisuals();
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  // drawBackground();
-  // setupPosition();
 };
-
-// p.setupPosition = () => {
-//   x = p.windowWidth / 2;
-//   y = p.windowHeight / 2;
-// };
-
-// p.windowResized = () => {
-//   p.resizeCanvas(p.windowWidth, p.windowHeight);
-//   p.drawBackground();
-//   p.setupPosition();
-// };
-
-// p.drawBackground = () => {
-//   p.background(0);
-// };
-
 
 function draw() {
   if (loading || getAudioContext().state === 'suspended') {
