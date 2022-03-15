@@ -1,16 +1,6 @@
-import { patch, scale } from '../music/0_patch.js';
 import { combineMelodies } from './combineMelodies.js';
 
-export const generateVoices = (one, two, three, four, five, six) => {
-  const state = {
-    1: one,
-    2: two,
-    3: three,
-    4: four,
-    5: five,
-    6: six
-  }
-
+export const generateVoices = (patch, scale, state) => {
   const { melodies, tempo } = runPatch(state, patch, scale);
   const voices = combineMelodies(melodies);
 

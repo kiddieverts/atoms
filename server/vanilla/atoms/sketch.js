@@ -1,19 +1,15 @@
 import { onDraw as playMusic, setupMusic } from './music-engine.js';
 import { getId, idToState } from './utils/misc.js';
 import { setupVisuals } from './visuals/visuals.js';
-import { draw as doDraw } from './visuals/draw.js'
+import { settings, drawFn } from './collection.js';
 
-let patch = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3 };
-let loading = true;
+let STATE = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3 };
+let IS_LOADING = true;
 
 function setup() {
-  patch = idToState(getId(window.location));
-  const isLooped = false;
-  setupMusic(getAudioContext(), patch, isLooped)
-    .then(() => {
-      loading = false;
-      getAudioContext().suspend();
-    });
+  STATE = idToState(getId(window.location));
+  getAudioContext().suspend();
+  setupMusic(getAudioContext(), settings, STATE, false).then(() => IS_LOADING = false);
   setupVisuals();
 }
 
@@ -22,12 +18,12 @@ function windowResized() {
 };
 
 function draw() {
-  if (loading || getAudioContext().state === 'suspended') {
+  if (IS_LOADING || getAudioContext().state === 'suspended') {
     return;
   }
 
   const { currentNotes, isStopped, voices } = playMusic(getAudioContext());
-  doDraw(currentNotes, patch, windowWidth, windowHeight, voices);
+  drawFn(currentNotes, STATE, windowWidth, windowHeight, voices);
   if (isStopped) {
     ctx.suspend();
   }
