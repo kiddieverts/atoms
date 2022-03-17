@@ -15,9 +15,8 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script type="module">
-    import sketch from './atoms/sketch.js';
+    import sketch, { getId, idToState } from './atoms-nft/index.js';
     import { settings } from './collection/index.js';
-    import { getId, idToState } from './atoms/utils/misc.js';
 
     const STATE = idToState(getId(window.location));
     const { setup, draw, windowResized, mouseClicked, init } = sketch(settings, STATE, true);

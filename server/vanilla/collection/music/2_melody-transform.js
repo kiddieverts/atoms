@@ -1,4 +1,4 @@
-import { applyToAllVoices } from '../../../lib/utils/applyToAllVoices.js';
+import { applyToAllVoices } from '../../atoms-nft/index.js';
 
 /* Retrograde */
 export const retrograde = (m) => m.reverse();

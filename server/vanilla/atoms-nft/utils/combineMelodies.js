@@ -1,5 +1,6 @@
 
-import { unpack } from '../../lib/utils/packing.js';
+import { unpack } from '../../atoms-nft/index.js';
+
 import { TOTAL_NUMBER_OF_TICKS } from '../constant.js'
 
 export const combineMelodies = (melodies) => {

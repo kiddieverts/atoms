@@ -1,4 +1,4 @@
-import { applyToAllVoices } from '../../../lib/utils/applyToAllVoices.js';
+import { applyToAllVoices } from '../../atoms-nft/index.js';
 
 const halveValue = (m) => {
   const final = [];

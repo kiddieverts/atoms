@@ -1,4 +1,4 @@
-import { pack, unpack } from '../../../lib/utils/packing.js';
+import { pack, unpack } from '../../atoms-nft/index.js';
 
 export const transposeDownTwoOctaves = m => transpose(m, -24);
 export const transposeDownOneOctave = m => transpose(m, -12);
