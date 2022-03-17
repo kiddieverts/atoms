@@ -1,7 +1,7 @@
 const getBpm = (x) => 60 / (60 / 3600 * x * 4);
 const getMs = (x) => 60 / 3600 * x * 4;
 
-export const getId = (loc) => {
+export const getIdFromParam = (loc) => {
   const sr = new URLSearchParams(loc.search);
   const id = sr.get('id') || null;
   return id;

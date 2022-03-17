@@ -1,9 +1,8 @@
-import sketch from './sketch.js';
-import { getId, idToState } from './utils/misc.js';
+import atoms from './atoms.js';
+import { getIdFromParam, idToState } from './utils/misc.js';
 import { pack, unpack } from './utils/packing.js';
 import { applyToAllVoices } from './utils/applyToAllVoices.js';
 
 // module.exports = sketch;
-
-export { getId, idToState, pack, unpack, applyToAllVoices };
-export default sketch;
+export { getIdFromParam, idToState, pack, unpack, applyToAllVoices };
+export default atoms;

@@ -1,18 +1,16 @@
 
 import { unpack } from '../../atoms-nft/index.js';
 
-import { TOTAL_NUMBER_OF_TICKS } from '../constant.js'
-
-export const combineMelodies = (melodies) => {
+export const combineMelodies = (melodies, totalNumberOfBeats) => {
   const combined = [];
 
-  for (let i = 0; i < TOTAL_NUMBER_OF_TICKS; i++) {
+  for (let i = 0; i < totalNumberOfBeats; i++) {
     combined.push([]);
   }
 
   for (let i = 0; i < melodies.length; i++) {
     const melody = melodies[i];
-    const newArr = calculateVoice(melody, i);
+    const newArr = calculateVoice(melody, i, totalNumberOfBeats);
 
     for (let j = 0; j < newArr.length; j++) {
       combined[j] = [...combined[j], newArr[j]];
@@ -22,13 +20,13 @@ export const combineMelodies = (melodies) => {
   return combined;
 }
 
-const calculateVoice = (m, melodyId) => {
+const calculateVoice = (m, melodyId, totalNumberOfBeats) => {
   let nextStep = {}
   const timeline = [];
 
   const [pitches, rhythm] = doUnpack(m);
 
-  for (let counter = 0; counter < TOTAL_NUMBER_OF_TICKS; counter++) {
+  for (let counter = 0; counter < totalNumberOfBeats; counter++) {
     let next = nextStep[melodyId];
 
     const ns = next === undefined

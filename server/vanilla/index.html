@@ -15,11 +15,11 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script type="module">
-    import sketch, { getId, idToState } from './atoms-nft/index.js';
+    import atoms, { getIdFromParam, idToState } from './atoms-nft/index.js';
     import { settings } from './collection/index.js';
 
-    const STATE = idToState(getId(window.location));
-    const { setup, draw, windowResized, mouseClicked, init } = sketch(settings, STATE, true);
+    const state = idToState(getIdFromParam(window.location));
+    const { setup, draw, windowResized, mouseClicked, init } = atoms(settings, state, true);
     init(p5);
   </script>
 </head>

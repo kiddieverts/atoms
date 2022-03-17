@@ -1,4 +1,4 @@
-import { MINT_PATH } from './constant.js';
+export const MINT_PATH = 'https://atooooms.web.app?id=';
 
 const mint = (st, updateFn) => {
   let THE_STATE = st;

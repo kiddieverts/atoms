@@ -1,19 +1,14 @@
 'use strict';
 
 import { musicEngine } from './music-engine.js';
-import { setupVisuals } from './visuals.js';
 
-const sketch = (settings, initState, showVisuals = true) => {
-  let STATE = initState;
-  let IS_LOADING = true;
+const atoms = (settings, initState, showVisuals = true) => {
+  let state = initState;
+  let isLoading = true;
 
-  const { onDraw: playMusic, setupMusic, updatePatchRow } = musicEngine();
+  const { playMusic, setupMusic, updatePatchRow } = musicEngine();
 
-  const update = (newState) => {
-    updatePatchRow(newState[0], newState[1]);
-  }
-
-  const init = (p5func) => {
+  const init = (p5func) => { // TODOL: <--
     new p5func(p5 => {
       p5.setup = () => setup(p5);
       p5.draw = () => draw(p5);
@@ -23,12 +18,27 @@ const sketch = (settings, initState, showVisuals = true) => {
   }
 
   const setup = (p) => {
-    // STATE = idToState(getId(window.location));
     const audioContext = p.getAudioContext();
     audioContext.suspend();
-    setupMusic(audioContext, settings, STATE, false).then(() => IS_LOADING = false);
+    setupMusic(audioContext, settings, state, false).then(() => isLoading = false);
     if (showVisuals) {
       setupVisuals(p);
+    }
+  }
+
+  const draw = (p) => {
+    const ctx = p.getAudioContext();
+    if (isLoading || p.getAudioContext().state === 'suspended') {
+      return;
+    }
+
+    const { currentNotes, isStopped, voices } = playMusic(ctx);
+    settings.drawFn(p, currentNotes, state, p.windowWidth, p.windowHeight, voices);
+    if (isStopped) {
+      saveFrames('item', 'png', 1, 1, (data) => {
+        console.log('save', data[0].imageData)
+      });
+      ctx.suspend();
     }
   }
 
@@ -36,21 +46,8 @@ const sketch = (settings, initState, showVisuals = true) => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 
-  const draw = (p) => {
-    const ctx = p.getAudioContext();
-    if (IS_LOADING || p.getAudioContext().state === 'suspended') {
-      return;
-    }
-
-    const { currentNotes, isStopped, voices } = playMusic(ctx);
-    settings.drawFn(p, currentNotes, STATE, p.windowWidth, p.windowHeight, voices);
-    if (isStopped) {
-      ctx.suspend();
-    }
-  }
-
   const onlyMusic = (p) => {
-    if (IS_LOADING) return;
+    if (isLoading) return;
     const ctx = p.getAudioContext();
     playMusic(ctx);
   }
@@ -64,7 +61,15 @@ const sketch = (settings, initState, showVisuals = true) => {
     }
   }
 
+  const setupVisuals = (p) => {
+    const cv = p.createCanvas(p.windowWidth, p.windowHeight);
+    p.background(0);
+    cv.position(0, 0);
+  }
+
+  const update = (newState) => updatePatchRow(newState[0], newState[1]);
+
   return { setup, draw, windowResized, mouseClicked, onlyMusic, update, init }
 }
 
-export default sketch;
+export default atoms;

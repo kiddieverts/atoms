@@ -1,5 +1,4 @@
 import { generateVoices } from './utils/generateVoices.js';
-import { TOTAL_NUMBER_OF_TICKS as TOTAL_NUMBER_OF_BEATS } from './constant.js';
 import { play as playFn, setupInstrument as setupInstrumentFn } from './instrument.js';
 
 export const musicEngine = () => {
@@ -15,13 +14,14 @@ export const musicEngine = () => {
   let PATCH = undefined;
   let SCALE = undefined;
   let SAMPLE_FILES = undefined;
-
+  let TOTAL_NUMBER_OF_BEATS = undefined;
 
   const setupMusic = (audioContext, settings, state, isLooped) => {
     IS_LOOPED = isLooped;
     PATCH = settings.patch;
     SCALE = settings.scale;
     SAMPLE_FILES = settings.sampleFiles;
+    TOTAL_NUMBER_OF_BEATS = settings.totalNumberOfBeats;
 
     updateWholePatch(state);
 
@@ -33,14 +33,20 @@ export const musicEngine = () => {
 
   const updatePatchRow = (row, col) => {
     const ns = { ...STATE, [row]: col };
-    const { voices: vc, tempo: numberOfFrames } = generateVoices(PATCH, SCALE, ns);
-    VOICES = vc;
-    STATE = ns;
-    NUMBER_OF_FRAMES = numberOfFrames;
+    updateWholePatch(ns);
     return ns;
   }
 
-  const onDraw = (audioContext) => {
+  const updateWholePatch = (ns) => {
+    const { voices: vc, tempo: numberOfFrames } = generateVoices(PATCH, SCALE, ns, TOTAL_NUMBER_OF_BEATS);
+    VOICES = vc;
+    STATE = ns;
+    NUMBER_OF_FRAMES = numberOfFrames;
+  }
+
+  const playMusic = (audioContext) => {
+    const getEmpty = () => ({ currentNotes: [], patch: STATE });
+
     if (!LOADED) {
       return getEmpty();
     }
@@ -58,15 +64,6 @@ export const musicEngine = () => {
     }
 
     return getEmpty();
-  }
-
-  const getEmpty = () => ({ currentNotes: [], patch: STATE });
-
-  const updateWholePatch = (ns) => {
-    const { voices: vc, tempo: numberOfFrames } = generateVoices(PATCH, SCALE, ns);
-    VOICES = vc;
-    STATE = ns;
-    NUMBER_OF_FRAMES = numberOfFrames;
   }
 
   const playNow = (audioContext, currentNotes, sampleFiles) => {
@@ -93,9 +90,6 @@ export const musicEngine = () => {
           BEAT = 0;
           return false;
         } else {
-          saveFrames('item', 'png', 1, 1, (data) => {
-            console.log('save', data[0].imageData)
-          });
           // getAudioContext().suspend();
           return true;
         }
@@ -105,5 +99,5 @@ export const musicEngine = () => {
     }
   }
 
-  return { setupMusic, updatePatchRow, onDraw }
+  return { setupMusic, updatePatchRow, playMusic }
 }
