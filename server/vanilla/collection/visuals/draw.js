@@ -5,7 +5,54 @@ let y2 = 0;
 let w_stored = 0;
 let h_stored = 0;
 
-export const draw = (currentNotes, patch, w, h, voices) => {
+export const draw = (p, currentNotes, patch, w, h, voices) => {
+  const drawVoice1 = (v1, vMin, vMax, globX, globY) => {
+    const a = p.random(-0, 500);
+    const b = p.random(-0, 500);
+    const c = p.random(-0, 500);
+
+    const range = vMax - vMin;
+
+    if (!v1) {
+      return;
+    }
+
+    const percentage = (vMax - v1) / range;
+    globY = percentage * p.height + p.random(-60, 60)
+
+    const xMiddle = p.width / 2;
+
+    globX = p.random(xMiddle - 500, xMiddle + 500);
+
+    p.fill(a, b, c, 40);
+    p.noStroke();
+    p.rect(globX, globY, 60, 60);
+  }
+
+  const drawVoice2 = (v1, vMin, vMax, globX, globY) => {
+    const a = p.random(-0, 500);
+    const b = p.random(-0, 500);
+    const c = p.random(-0, 500);
+
+    const range = vMax - vMin;
+
+    if (!v1) {
+      return;
+    }
+
+    const percentage = (vMax - v1) / range;
+    globY = percentage * height;
+
+    globY = globY + p.random(globY - 20, globY + 20);
+
+    const xMiddle = width / 2;
+    globX = p.random(xMiddle - 500, xMiddle + 500);
+
+    p.fill(a, b, c, 20);
+    p.noStroke();
+    p.rect(globX, globY, 30, 20);
+  }
+
   const [p1, nl1] = currentNotes[0];
   let p2 = undefined;
   let nl2 = undefined;
@@ -59,52 +106,4 @@ const getMax = (arr) => {
     });
 
   return { max, min };
-}
-
-const drawVoice1 = (v1, vMin, vMax, globX, globY) => {
-  const a = random(-0, 500);
-  const b = random(-0, 500);
-  const c = random(-0, 500);
-
-  const range = vMax - vMin;
-
-  if (!v1) {
-    return;
-  }
-
-  const percentage = (vMax - v1) / range;
-  globY = percentage * height + random(-60, 60)
-
-  const xMiddle = width / 2;
-
-  globX = random(xMiddle - 500, xMiddle + 500);
-
-
-  fill(a, b, c, 40);
-  noStroke();
-  rect(globX, globY, 60, 60);
-}
-
-const drawVoice2 = (v1, vMin, vMax, globX, globY) => {
-  const a = random(-0, 500);
-  const b = random(-0, 500);
-  const c = random(-0, 500);
-
-  const range = vMax - vMin;
-
-  if (!v1) {
-    return;
-  }
-
-  const percentage = (vMax - v1) / range;
-  globY = percentage * height;
-
-  globY = globY + random(globY - 20, globY + 20);
-
-  const xMiddle = width / 2;
-  globX = random(xMiddle - 500, xMiddle + 500);
-
-  fill(a, b, c, 20);
-  noStroke();
-  rect(globX, globY, 30, 20);
 }

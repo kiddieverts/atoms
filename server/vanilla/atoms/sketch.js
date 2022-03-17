@@ -1,3 +1,5 @@
+'use strict';
+
 import { musicEngine } from './music-engine.js';
 import { setupVisuals } from './visuals.js';
 
@@ -11,39 +13,50 @@ const sketch = (settings, initState, showVisuals = true) => {
     updatePatchRow(newState[0], newState[1]);
   }
 
-  const setup = () => {
+  const init = (p5func) => {
+    new p5func(p5 => {
+      p5.setup = () => setup(p5);
+      p5.draw = () => draw(p5);
+      p5.windowResized = () => windowResized(p5);
+      p5.mouseClicked = () => mouseClicked(p5);
+    });
+  }
+
+  const setup = (p) => {
     // STATE = idToState(getId(window.location));
-    const audioContext = getAudioContext();
+    const audioContext = p.getAudioContext();
     audioContext.suspend();
     setupMusic(audioContext, settings, STATE, false).then(() => IS_LOADING = false);
     if (showVisuals) {
-      setupVisuals();
+      setupVisuals(p);
     }
   }
 
-  const windowResized = () => {
-    resizeCanvas(windowWidth, windowHeight);
+  const windowResized = (p) => {
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 
-  const draw = () => {
-    if (IS_LOADING || getAudioContext().state === 'suspended') {
+  const draw = (p) => {
+    const ctx = p.getAudioContext();
+    if (IS_LOADING || p.getAudioContext().state === 'suspended') {
       return;
     }
 
-    const { currentNotes, isStopped, voices } = playMusic(getAudioContext());
-    settings.drawFn(currentNotes, STATE, windowWidth, windowHeight, voices);
+    const { currentNotes, isStopped, voices } = playMusic(ctx);
+    settings.drawFn(p, currentNotes, STATE, p.windowWidth, p.windowHeight, voices);
     if (isStopped) {
-      getAudioContext().suspend();
+      ctx.suspend();
     }
   }
 
-  const onlyMusic = () => {
+  const onlyMusic = (p) => {
     if (IS_LOADING) return;
-    playMusic(getAudioContext());
+    const ctx = p.getAudioContext();
+    playMusic(ctx);
   }
 
-  const mouseClicked = () => {
-    const audioContext = getAudioContext();
+  const mouseClicked = (p) => {
+    const audioContext = p.getAudioContext();
     audioContext.resume();
     const el = document.getElementById('play-btn');
     if (!!el) {
@@ -51,7 +64,7 @@ const sketch = (settings, initState, showVisuals = true) => {
     }
   }
 
-  return { setup, draw, windowResized, mouseClicked, onlyMusic, update }
+  return { setup, draw, windowResized, mouseClicked, onlyMusic, update, init }
 }
 
 export default sketch;

@@ -20,14 +20,9 @@
     import { getId, idToState } from './atoms/utils/misc.js';
 
     const STATE = idToState(getId(window.location));
-
-    const { setup, draw, windowResized, mouseClicked } = sketch(settings, STATE);
-    window.setup = setup;
-    window.draw = draw;
-    window.windowResized = windowResized;
-    window.mouseClicked = mouseClicked;
+    const { setup, draw, windowResized, mouseClicked, init } = sketch(settings, STATE, true);
+    init(p5);
   </script>
-
 </head>
 
 <body>

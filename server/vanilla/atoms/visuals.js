@@ -1,5 +1,5 @@
-export const setupVisuals = () => {
-  const cv = createCanvas(windowWidth, windowHeight);
-  background(0);
+export const setupVisuals = (p) => {
+  const cv = p.createCanvas(p.windowWidth, p.windowHeight);
+  p.background(0);
   cv.position(0, 0);
 }
