@@ -1,4 +1,4 @@
-import { patch, scale } from './music/0_patch.js';
+import { patch, scale, labels } from './music/0_patch.js';
 import { draw as drawFn } from './visuals/draw.js';
 
 const getFullFileName = (fileName) => `/collection/samples/${fileName}.wav`;
@@ -26,4 +26,5 @@ export const settings = {
   sampleFiles,
   scale,
   totalNumberOfBeats,
+  labels
 }

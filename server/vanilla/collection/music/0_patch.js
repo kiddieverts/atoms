@@ -7,6 +7,8 @@ import { doHalveValue, doEveryEightNoteIsTurnedIntoDottedEightNote, doEveryOther
 
 const doNothing = (m) => m;
 
+export const labels = ['melody', 'melody trans', 'pitch trans', 'voices', 'tempo', 'octave'];
+
 export const patch = {
   1: {
     1: [getMelodyA, 'Melody A'],

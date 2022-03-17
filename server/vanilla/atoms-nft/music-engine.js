@@ -34,7 +34,7 @@ export const musicEngine = () => {
   const updatePatchRow = (row, col) => {
     const ns = { ...STATE, [row]: col };
     updateWholePatch(ns);
-    return ns;
+    return STATE;
   }
 
   const updateWholePatch = (ns) => {
