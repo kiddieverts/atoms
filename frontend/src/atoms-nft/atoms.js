@@ -6,7 +6,7 @@ const atoms = (settings, initState, showVisuals = true, isLooped = false) => {
   let state = initState;
   let isLoading = true;
 
-  const { playMusic, setupMusic, updatePatchRow } = musicEngine();
+  const { playMusic, setupMusic, updatePatchRow, updateWholePatch } = musicEngine();
 
   const init = (p5func) => { // TODO: <-- Rename ? 
     new p5func(p5 => {
@@ -18,18 +18,26 @@ const atoms = (settings, initState, showVisuals = true, isLooped = false) => {
   }
 
   const initOnlyMusic = (p5func) => {
-    new p5func(p5 => {
-      p5.setup = () => setup(p5);
-      p5.draw = () => onlyMusic(p5);
-      p5.windowResized = () => windowResized(p5);
-      p5.mouseClicked = () => mouseClicked(p5);
-    });
+    return new Promise((res, rej) => {
+      new p5func(p5 => {
+        const audioContext = p5.getAudioContext();
+        setupMusic(audioContext, settings, state, isLooped)
+          .then(() => {
+            isLoading = false;
+
+            p5.setup = () => setup(p5);
+            p5.draw = () => onlyMusic(p5);
+            p5.windowResized = () => windowResized(p5);
+            p5.mouseClicked = () => mouseClicked(p5);
+            res();
+          });
+      });
+    })
   }
 
   const setup = (p) => {
     const audioContext = p.getAudioContext();
     audioContext.suspend();
-    setupMusic(audioContext, settings, state, isLooped).then(() => isLoading = false);
     if (showVisuals) {
       setupVisuals(p);
     }
@@ -76,9 +84,9 @@ const atoms = (settings, initState, showVisuals = true, isLooped = false) => {
     cv.position(0, 0);
   }
 
-  const update = (newState) => updatePatchRow(+newState[0], +newState[1]);
+  const updatePartial = (newState) => updatePatchRow(+newState[0], +newState[1]);
 
-  return { setup, draw, windowResized, mouseClicked, onlyMusic, update, init, initOnlyMusic }
+  return { setup, draw, windowResized, mouseClicked, onlyMusic, updatePartial, init, initOnlyMusic, updateWholePatch }
 }
 
 export default atoms;

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import atoms, { renderPads, getIdFromParam, idToState, convertToState } from '../atoms-nft/index.js';
+import atoms, { renderPads, idToState, convertToState } from '../atoms-nft/index.js';
 import { settings } from '../collection/index.js';
 
 const AtomsStuff = () => {
-  // const tokenId = getIdFromParam(window.location);
   const handleUpdate = (x) => console.log('handleUpdate', x);
 
   const searchParams = new URLSearchParams(window.location.search);
@@ -30,12 +29,10 @@ const AtomsStuff = () => {
   </>
 }
 
-const AtomsVisuals = ({ tokenId, isSmall, state }) => {
+export const AtomsVisuals = ({ tokenId, isSmall, state }) => {
   useEffect(() => {
     const state = idToState(tokenId);
     const { init } = atoms(settings, state, true);
-    // const w = isSmall ? 640 : undefined;
-    // const h = isSmall ? 640 : undefined;
 
     init((window as any).p5);
   }, []);
@@ -46,27 +43,36 @@ const AtomsVisuals = ({ tokenId, isSmall, state }) => {
   </>
 }
 
-const AtomsPads = ({ onStateUpdate, propsState }) => {
+export const AtomsPads = ({ onStateUpdate, propsState }) => {
   const [state, setState] = useState({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
+  const [isReady, setIsReady] = useState(false);
+
+  const [atm] = useState(atoms(settings, state, false, true));
+  const [reRenderFn, setReRenderFn] = useState<any>(undefined);
+
+  useEffect(() => {
+    atm.initOnlyMusic((window as any).p5).then(r => {
+      const handleUpdate = (id) => {
+        const newState = atm.updatePartial(id);
+        setState(newState);
+        onStateUpdate(newState);
+      };
+      const { reRender } = renderPads(settings.patch, settings.labels, state, handleUpdate);
+      setReRenderFn(() => reRender);
+      setIsReady(true);
+    });
+  }, []);
 
   useEffect(() => {
     setState(propsState);
   }, [propsState]);
 
   useEffect(() => {
-    const { initOnlyMusic, update } = atoms(settings, state, false, true);
-    initOnlyMusic((window as any).p5);
-
-    const handleUpdate = (id) => {
-      const newState = update(id);
-      setState(newState);
-      onStateUpdate(newState);
-    };
-
-    console.log('>>>', state)
-
-    renderPads(settings.patch, settings.labels, state, handleUpdate);
-  }, []);
+    if (isReady) {
+      atm.updateWholePatch(propsState);
+      reRenderFn(propsState);
+    }
+  }, [isReady]);
 
   return <>
     <div id="atoms-mint"></div>

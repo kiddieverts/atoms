@@ -34,6 +34,12 @@ export const renderPads = (patch, labels, state, onUpdateStateCb) => {
 
   renederPadsElements(state, numberOfCols);
   addClickListeners(onUpdateStateCb, state, numberOfCols);
+
+  const reRender = (newState) => {
+    renederPadsElements(newState, numberOfCols);
+  }
+
+  return { reRender }
 }
 
 const renederPadsElements = (state, numberOfCols) => {

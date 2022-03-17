@@ -99,5 +99,5 @@ export const musicEngine = () => {
     }
   }
 
-  return { setupMusic, updatePatchRow, playMusic }
+  return { setupMusic, updatePatchRow, playMusic, updateWholePatch }
 }
