@@ -15,10 +15,17 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script type="module">
-    import atoms, { getIdFromParam, idToState } from './atoms-nft/index.js';
+    import atoms, { getIdFromParam, idToState, convertToState } from './atoms-nft/index.js';
     import { settings } from './collection/index.js';
 
-    const state = idToState(getIdFromParam(window.location));
+    const searchParams = new URLSearchParams(window.location.search);
+    const stateStr = searchParams.get('state') || null;
+    const tokenId = searchParams.get('id') || null;
+
+    const state = !!stateStr
+      ? idToState(stateStr)
+      : convertToState(tokenId);
+
     const { setup, draw, windowResized, mouseClicked, init } = atoms(settings, state, true);
     init(p5);
   </script>
