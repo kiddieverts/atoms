@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import Atoms from './components/Atoms';
 import Web3 from 'web3';
 import { Route, Routes } from "react-router-dom";
 
 import Token from './token.json';
-import { ColNum, PadState } from './types';
+import AtomsStuff from './components/AtomsStuff';
 
 const TheApp = () => {
   const [contract, setContract] = useState(null);
@@ -33,7 +32,6 @@ const TheApp = () => {
   useEffect(() => {
     const w = (window as any);
     const Tkn = (Token as any).output;
-    console.log(Tkn);
 
     if (w.ethereum) {
       w.ethereum.request({ method: 'eth_requestAccounts' })
@@ -41,8 +39,6 @@ const TheApp = () => {
           const myAccount = accounts[0];
           const w3 = new Web3(w.ethereum);;
           const theContract = new w3.eth.Contract(Tkn.abi, '0x7ED3f7a0fa535123838ECa29EF91D98C09D51Fb1');
-
-          console.log('BANG', myAccount, theContract);
 
           setContract(theContract);
           setAccount(myAccount);
@@ -82,33 +78,10 @@ const TheApp = () => {
 const App = () => {
   return <>
     <Routes>
-      <Route path="/" element={<TheApp />} />
-      <Route path="/art" element={<Art />} />
+      <Route path="/" element={<AtomsStuff />} />
+      <Route path="/mint" element={<TheApp />} />
     </Routes>
   </>
-}
-
-const Art = () => {
-  const [state, setState] = useState<PadState>({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
-
-  useEffect(() => {
-    const s = window.location.search.replace('?', '');
-
-    if (s.length !== 6) return;
-
-    const theState: PadState = {
-      1: +[s[0]] as ColNum,
-      2: +[s[1]] as ColNum,
-      3: +[s[2]] as ColNum,
-      4: +[s[3]] as ColNum,
-      5: +[s[4]] as ColNum,
-      6: +[s[5]] as ColNum
-    };
-
-    setState(theState);
-  }, []);
-
-  return <Atoms onMint={() => { }} theState={state} hideLabels={true} isLocked={false} />
 }
 
 export default App;

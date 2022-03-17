@@ -1,0 +1,85 @@
+:root{
+  --primary-color: rgb(249, 224, 0);
+  --text-color: rgb(69, 62, 2);
+  --main-font: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: black;
+  color: var(--text-color);
+  font-family: var(--main-font);
+  font-size: 12px;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+  height: 100vh;
+} 
+
+button {
+  border: 2px solid var(--primary-color);
+  height: 64px;
+  min-width: 100px;
+  background-color: transparent;
+  color: var(--primary-color);
+  font-size: 24px;
+  cursor: pointer;
+  margin: 8px;
+}
+
+.pad {
+  cursor: pointer;
+  height: 64px;
+  width: 64px;
+  margin: 2px;
+}
+
+.pad:hover{
+  background-color: var(--primary-color);
+  opacity: 0.3;
+  color: pink;
+}
+
+.token-text {
+  color: var(--primary-color);
+  font-size: 18px;
+  font-family: 'Courier New', Courier, monospace;
+  text-align: right; 
+  cursor: pointer;
+}
+
+.selected {
+  background-color: var(--primary-color);
+  color: black !important;
+}
+
+.pad-row-text {
+  height: 64px;
+  width: 64px;
+  margin: 2px;
+  display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+  text-align: right;
+	align-items: right;
+	align-content: center;
+  text-align: right;
+  padding-right: 24px;
+}
+
+.pad-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.mint-btn {
+  margin: 32px;
+}
