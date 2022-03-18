@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Web3 from 'web3';
 
-import Token from '../token.json';
+import Token from '../../token.json';
 import { Pads } from './Pads';
 
 const CONTRACT_ADDRESS = '0x7ED3f7a0fa535123838ECa29EF91D98C09D51Fb1';

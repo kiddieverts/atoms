@@ -32,6 +32,7 @@ const convertToStateString = (tokenId, numberOfRows, numberOfCols) => {
 export const stateStringToTokenId = (stateStr) => {
   const arr = stateStr
     .split('')
+    .reverse()
     .map(x => parseInt(x) - 1)
     .join('');
 
