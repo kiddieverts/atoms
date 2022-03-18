@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import atoms, { renderPads, idToState, convertToState } from '../atoms-nft/index.js';
+import atoms, { renderPads, stateStringToStateObject, convertTokenIdToState } from '../atoms-nft/index.js';
 import { settings } from '../collection/index.js';
 
 const AtomsStuff = () => {
@@ -11,8 +11,8 @@ const AtomsStuff = () => {
   const tokenId = searchParams.get('id') || null;
 
   const state = !!stateStr
-    ? idToState(stateStr)
-    : convertToState(tokenId);
+    ? stateStringToStateObject(stateStr)
+    : convertTokenIdToState(tokenId);
 
   const sr = new URLSearchParams(window.location.search);
   const isPad = sr.get('pad') === "true";
@@ -31,7 +31,7 @@ const AtomsStuff = () => {
 
 export const AtomsVisuals = ({ tokenId, isSmall, state }) => {
   useEffect(() => {
-    const state = idToState(tokenId);
+    const state = stateStringToStateObject(tokenId);
     const { init } = atoms(settings, state, true);
 
     init((window as any).p5);
@@ -43,11 +43,13 @@ export const AtomsVisuals = ({ tokenId, isSmall, state }) => {
   </>
 }
 
+const initState = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 5, 6: 3 };
+
 export const AtomsPads = ({ onStateUpdate, propsState }) => {
-  const [state, setState] = useState({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
+  const [state, setState] = useState(initState);
+  const [atm] = useState(atoms(settings, initState, false, true))
   const [isReady, setIsReady] = useState(false);
 
-  const [atm] = useState(atoms(settings, state, false, true));
   const [reRenderFn, setReRenderFn] = useState<any>(undefined);
 
   useEffect(() => {

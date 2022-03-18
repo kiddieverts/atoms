@@ -1,4 +1,20 @@
-body {
+button {
+  border: 2px solid var(--primary-color);
+  height: 64px;
+  min-width: 100px;
+  background-color: transparent;
+  color: var(--primary-color);
+  font-size: 24px;
+  cursor: pointer;
+  margin: 8px;
+}
+
+button:disabled{
+  opacity: 0.5;
+  cursor: unset;
+}
+
+/* body {
   background-color: black;
   color: rgb(69, 62, 2);
   font-family: Arial, Helvetica, sans-serif;
@@ -41,7 +57,7 @@ body {
 
   &:hover {
     border-color: transparent transparent transparent #404040;
-  } */
+  } 
 }
 
 .token-text {
@@ -75,9 +91,9 @@ body {
     border-style: double;
     border-width: 0px 0 0px 18px;
 
-  /* &:hover {
+  &:hover {
     border-color: transparent transparent transparent #404040;
-  } */ 
+  } 
 }
 
 .play-button.paused {
@@ -106,10 +122,6 @@ main {
 
 .button2-selected {
   border-color: rgb(249, 224, 0) !important;
-   /* background-color: gray; */
-   
-     /* background-color: rgb(249, 224, 0); */
-  /* color: black !important; */
   color: rgb(249, 224, 0);
 }
 
@@ -174,8 +186,7 @@ button {
 
 
 .tile-static {
-  /* cursor: pointer; */
   height: 64px;
   width: 64px;
   margin: 2px;
-}
+} */

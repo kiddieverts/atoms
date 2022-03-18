@@ -37,3 +37,7 @@ export const stateStringToTokenId = (stateStr) => {
 
   return parseInt(arr, 5) + 1;
 }
+
+export const stateObjectToStateString = (x) => {
+  return Object.keys(x).map(key => x[key]).join('');
+}

@@ -1,10 +1,21 @@
-import atoms from './atoms.js';
-import { getIdFromParam, idToState } from './utils/misc.js';
-import { pack, unpack } from './utils/packing.js';
 import { applyToAllVoices } from './utils/applyToAllVoices.js';
+import { convertToState as convertTokenIdToState } from './utils/tokenIdToState.js';
+import { getIdFromParam, idToState as stateStringToStateObject } from './utils/misc.js';
+import { pack, unpack } from './utils/packing.js';
 import { renderPads } from './pads.js';
-import { convertToState } from './utils/tokenIdToState.js';
+import { stateObjectToStateString, stateStringToTokenId } from './utils/tokenIdToState';
+import atoms from './atoms.js';
 
-// module.exports = sketch;
-export { getIdFromParam, idToState, pack, unpack, applyToAllVoices, renderPads, convertToState };
+export {
+  applyToAllVoices,
+  convertTokenIdToState,
+  getIdFromParam,
+  pack,
+  renderPads,
+  stateObjectToStateString,
+  stateStringToStateObject,
+  stateStringToTokenId,
+  unpack,
+};
+
 export default atoms;

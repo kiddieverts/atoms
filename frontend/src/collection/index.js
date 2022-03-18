@@ -1,7 +1,7 @@
 import { patch, scale, labels } from './music/0_patch.js';
 import { draw as drawFn } from './visuals/draw.js';
 
-const getFullFileName = (fileName) => `/samples/${fileName}.wav`;
+const getFullFileName = (fileName) => `/collection/samples/${fileName}.wav`;
 
 const sampleFiles = [
   [getFullFileName('c0'), 0],

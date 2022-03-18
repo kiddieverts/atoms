@@ -25,12 +25,6 @@ export const renderPads = (patch, labels, state, onUpdateStateCb) => {
     }
   }
 
-  const mintBtn = document.createElement('button');
-  mintBtn.id = 'mint';
-  mintBtn.classList.add('mint-btn');
-  mintBtn.innerText = 'MINT';
-
-  root.append(mintBtn);
 
   renederPadsElements(state, numberOfCols);
   addClickListeners(onUpdateStateCb, state, numberOfCols);
