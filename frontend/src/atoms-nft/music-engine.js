@@ -15,6 +15,17 @@ export const musicEngine = () => {
   let SCALE = undefined;
   let SAMPLE_FILES = undefined;
   let TOTAL_NUMBER_OF_BEATS = undefined;
+  let TEMP_STATE = undefined;
+
+  const restart = () => {
+    CNT = 0;
+    BEAT = 0;
+    TMP = -1;
+  }
+
+  const setIsLooped = (isLooped) => {
+    IS_LOOPED = isLooped;
+  }
 
   const setupMusic = (audioContext, settings, state, isLooped) => {
     IS_LOOPED = isLooped;
@@ -23,25 +34,26 @@ export const musicEngine = () => {
     SAMPLE_FILES = settings.sampleFiles;
     TOTAL_NUMBER_OF_BEATS = settings.totalNumberOfBeats;
 
-    updateWholePatch(state);
-
     return setupInstrumentFn(audioContext, settings.sampleFiles).then(smpls => {
       SAMPLES = smpls;
       LOADED = true;
+      if (!!TEMP_STATE) {
+        updateState(TEMP_STATE);
+      }
     });
   }
 
-  const updatePatchRow = (row, col) => {
-    const ns = { ...STATE, [row]: col };
-    updateWholePatch(ns);
-    return STATE;
-  }
-
-  const updateWholePatch = (ns) => {
-    const { voices: vc, tempo: numberOfFrames } = generateVoices(PATCH, SCALE, ns, TOTAL_NUMBER_OF_BEATS);
-    VOICES = vc;
-    STATE = ns;
-    NUMBER_OF_FRAMES = numberOfFrames;
+  const updateState = (ns) => {
+    if (!LOADED) {
+      TEMP_STATE = ns;
+    }
+    else {
+      TEMP_STATE = undefined;
+      const { voices: vc, tempo: numberOfFrames } = generateVoices(PATCH, SCALE, ns, TOTAL_NUMBER_OF_BEATS);
+      VOICES = vc;
+      STATE = ns;
+      NUMBER_OF_FRAMES = numberOfFrames;
+    }
   }
 
   const playMusic = (audioContext) => {
@@ -99,5 +111,5 @@ export const musicEngine = () => {
     }
   }
 
-  return { setupMusic, updatePatchRow, playMusic, updateWholePatch }
+  return { setupMusic, playMusic, updateState, setIsLooped, restart }
 }

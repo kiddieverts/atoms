@@ -1,15 +1,17 @@
-'use strict';
-
 import { musicEngine } from './music-engine.js';
 
-const atoms = (settings, initState, showVisuals = true, isLooped = false, onReadyCallback, frame) => {
-  let state = initState;
+const atoms = (config) => {
+  const { settings, state, isLooped = false, onReady = () => { } } = config;
   let isLoading = true;
+  let showVisuals = config.showVisuals || true;
+  let canvas = config.canvas || undefined;
 
-  const { playMusic, setupMusic, updatePatchRow, updateWholePatch } = musicEngine();
+  const { setupMusic, playMusic, updateState, setIsLooped, restart: restartMusic } = musicEngine();
 
-  const init = (p5func) => { // TODO: <-- Rename ? 
-    new p5func(p5 => {
+  let p5instance = undefined;
+
+  const init = (p5func) => {
+    p5instance = new p5func(p5 => {
       p5.setup = () => setup(p5);
       p5.draw = () => draw(p5);
       p5.windowResized = () => windowResized(p5);
@@ -17,24 +19,28 @@ const atoms = (settings, initState, showVisuals = true, isLooped = false, onRead
     });
   }
 
-  const initOnlyMusic = (p5func) => {
-    init(p5func);
-  }
-
   const setup = (p) => {
-    console.log('P5 Setup')
     const audioContext = p.getAudioContext();
     audioContext.suspend();
     setupMusic(audioContext, settings, state, isLooped)
       .then(() => {
         isLoading = false;
-        onReadyCallback(true);
+        onReady(true);
       });
 
     if (showVisuals) {
-      console.log('setupvis')
-      setupVisuals(p, frame);
+      setupVisuals(p, canvas);
     }
+  }
+
+  const setupVisuals = (p, frame) => {
+    const w = !!frame && frame.w ? frame.w : p.windowWidth;
+    const h = !!frame && frame.h ? frame.h : p.windowHeight;
+    const x = !!frame && frame.x ? frame.x : 0;
+    const y = !!frame && frame.y ? frame.y : 0;
+    const cv = p.createCanvas(w, h);
+    p.background(100);
+    cv.position(x, y);
   }
 
   const draw = (p) => {
@@ -68,19 +74,50 @@ const atoms = (settings, initState, showVisuals = true, isLooped = false, onRead
     }
   }
 
-  const setupVisuals = (p, frame) => {
-    const w = !!frame && frame.w ? frame.w : p.windowWidth;
-    const h = !!frame && frame.h ? frame.h : p.windowHeight;
-    const x = !!frame && frame.x ? frame.x : 0;
-    const y = !!frame && frame.y ? frame.y : 0;
-    const cv = p.createCanvas(w, h);
-    p.background(255);
-    cv.position(x, y);
+  const update = (newState) => updateState(newState);
+
+  const restart = () => {
+    const config = {
+      isLooped,
+      showVisuals,
+      canvas
+    }
+
+    const ctx = p5instance.getAudioContext();
+    ctx.suspend();
+    restartMusic();
+
+    setNewConfig(config);
   }
 
-  const updatePartial = (newState) => updatePatchRow(+newState[0], +newState[1]);
+  const toggleVisuals = () => {
+    const config = {
+      isLooped,
+      showVisuals: !showVisuals,
+      canvas
+    }
+    setNewConfig(config);
+  }
 
-  return { setup, draw, windowResized, mouseClicked, updatePartial, init, initOnlyMusic, updateWholePatch }
+  const setNewConfig = (config) => {
+    isLoading = true;
+
+    setIsLooped(config.isLooped);
+    const ctx = p5instance.getAudioContext();
+    ctx.suspend();
+
+    showVisuals = config.showVisuals;
+    canvas = config.canvas;
+
+    p5instance.clear();
+    if (showVisuals) {
+      setupVisuals(p5instance, canvas);
+    }
+    isLoading = false;
+    ctx.resume();
+  }
+
+  return { init, update, restart, setNewConfig, toggleVisuals }
 }
 
 export default atoms;

@@ -1,84 +1,68 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import atoms, { convertTokenIdToState, stateStringToStateObject } from '../../atoms-nft';
+import { convertTokenIdToState, stateObjectToStateString, stateStringToStateObject, stateStringToTokenId } from '../../atoms-nft';
 import AtomsPads from '../../components/Atoms';
 import { PadState } from '../../types';
-import { stateObjectToStateString, stateStringToTokenId } from '../../atoms-nft/utils/tokenIdToState';
-import { settings } from '../../collection';
-import { AtomsContext } from '../../components/Atoms/AtomsContext';
+import { useAtoms } from './useAtoms';
 
-const useAtoms = () => {
-  const initState = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 };
-  const [isReady, setIsReady] = useState(false);
-
-  const handleReady = () => setIsReady(true);
-
-  const [atm, setAtm] = useContext(AtomsContext);
-
-  useEffect(() => {
-    if (!atm) {
-      const showVisuals = true;
-      const isLooped = true;
-      const canvas = {
-        x: 1200,
-        y: 100,
-        h: 400,
-        w: 400
-      }
-      setAtm(atoms(settings, initState, showVisuals, isLooped, handleReady, canvas));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!!atm) {
-      atm.initOnlyMusic((window as any).p5);
-    }
-  }, [atm]);
-
-
-  return { atm, isReady }
-}
-
-const Parent = () => {
+const Dev = () => {
   const [state, setState] = useState<PadState>({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
+  const [padNumber, setPadNumber] = useState(undefined);
   const [params] = useSearchParams();
   const searchParams = new URLSearchParams(params);
-  const tokenId = searchParams.get('id');
+  const id = searchParams.get('id');
   const stateString = searchParams.get('state');
-
-  const { atm, isReady } = useAtoms();
-
+  const { atoms, isReady } = useAtoms(state);
   const navigate = useNavigate();
+  const tokenId = stateStringToTokenId(stateObjectToStateString(state));
 
   useEffect(() => {
-    if (!tokenId && !stateString) {
+    if (!id && !stateString) {
       navigate(`?id=${1}`);
     }
 
     const theState = !!stateString
       ? stateStringToStateObject(stateString)
-      : convertTokenIdToState(tokenId);
+      : convertTokenIdToState(id);
 
+    console.log('[dev]', theState)
     setState(theState as PadState);
-  }, [tokenId]);
+  }, [id, stateString]);
 
-  const handleUpdate = (newState: PadState) => {
-    const str = stateObjectToStateString(newState);
-    setState(newState);
-    const tokenId = stateStringToTokenId(str);
-    // onUpdate(tokenId);
-  };
+  useEffect(() => {
+    if (!!padNumber) {
+      const [row, col] = padNumber;
+      const newState = { ...state, [row]: parseInt(col) };
+      const str = stateObjectToStateString(newState);
+
+      navigate(`?state=${str}`);
+      setState(newState);
+    }
+  }, [padNumber]);
+
+  const handleUpdatePad = (padNumber) => setPadNumber(padNumber);
+  const toggleVisuals = () => atoms.toggleVisuals()
+  const toggleReset = () => atoms.restart();
 
   return <>
+    <h1>#{tokenId}</h1>
     <AtomsPads
-      onStateUpdate={handleUpdate}
+      onStateUpdate={handleUpdatePad}
       state={state}
-      atoms={atm}
+      atoms={atoms}
       isReady={isReady}
     />
-  </>
-}
 
-export default Parent;
+    <button onClick={toggleVisuals}>Show / hide</button>
+    <button onClick={toggleReset}>Reset</button>
+
+
+    <pre>
+      {JSON.stringify(state, null, 2)}
+    </pre>
+  </>
+};
+
+export default Dev;

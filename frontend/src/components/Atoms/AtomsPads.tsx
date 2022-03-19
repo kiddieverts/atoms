@@ -8,21 +8,17 @@ const AtomsPads = ({ onStateUpdate, state, atoms: atm, isReady }) => {
   const [reRenderFn, setReRenderFn] = useState<any>(undefined);
 
   useEffect(() => {
-    const handleUpdate = (id) => {
-      const newState = atm.updatePartial(id);
-      onStateUpdate(newState);
-    };
-
-    const { reRender } = renderPads(settings.patch, settings.labels, state, handleUpdate);
-    setReRenderFn(() => reRender);
-  }, []);
+    if (!!atm) {
+      const { reRender } = renderPads(settings.patch, settings.labels, state, onStateUpdate);
+      setReRenderFn(() => reRender);
+    }
+  }, [atm]);
 
   useEffect(() => {
     if (isReady) {
-      atm.updateWholePatch(state);
       reRenderFn(state);
     }
-  }, [isReady]);
+  }, [state, isReady]);
 
   return <>
     <div id="atoms-mint"></div>
