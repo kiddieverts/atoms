@@ -46,13 +46,16 @@ export const musicEngine = () => {
   const updateState = (ns) => {
     if (!LOADED) {
       TEMP_STATE = ns;
+      return undefined;
     }
     else {
       TEMP_STATE = undefined;
-      const { voices: vc, tempo: numberOfFrames } = generateVoices(PATCH, SCALE, ns, TOTAL_NUMBER_OF_BEATS);
+      const res = generateVoices(PATCH, SCALE, ns, TOTAL_NUMBER_OF_BEATS);
+      const { voices: vc, tempo: numberOfFrames } = res;
       VOICES = vc;
       STATE = ns;
       NUMBER_OF_FRAMES = numberOfFrames;
+      return res;
     }
   }
 

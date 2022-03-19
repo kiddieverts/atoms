@@ -27,7 +27,6 @@ const Dev = () => {
       ? stateStringToStateObject(stateString)
       : convertTokenIdToState(id);
 
-    console.log('[dev]', theState)
     setState(theState as PadState);
   }, [id, stateString]);
 
@@ -46,6 +45,10 @@ const Dev = () => {
   const toggleVisuals = () => atoms.toggleVisuals()
   const toggleReset = () => atoms.restart();
 
+  // const finalArr = arr?.voices.filter(voices => {
+  //   return voices.find(([pitch, noteLength]) => !!pitch);
+  // })
+
   return <>
     <h1>#{tokenId}</h1>
     <AtomsPads
@@ -57,7 +60,6 @@ const Dev = () => {
 
     <button onClick={toggleVisuals}>Show / hide</button>
     <button onClick={toggleReset}>Reset</button>
-
 
     <pre>
       {JSON.stringify(state, null, 2)}

@@ -33,25 +33,32 @@ export const useAtoms = (state) => {
 
   useEffect(() => {
     if (!!atm) {
-      atm.update(state);
+      update();
     }
   }, []);
 
   useEffect(() => {
     if (!!atm) {
-      atm.update(state);
+      update();
     }
   }, [atm]);
 
   useEffect(() => {
     if (!!atm && !!state) {
-      atm.update(state);
+      update();
     }
   }, [state]);
+
+  const update = () => {
+    const st = atm.update(state);
+    setArr(st);
+  }
 
   const handleReady = () => setIsReady(true);
   const restart = () => { }
   const setNewConfig = (config) => atm.setNewConfig(config);
 
-  return { atoms: atm, isReady, restart, setNewConfig };
+  const [arr, setArr] = useState(undefined);
+
+  return { atoms: atm, isReady, restart, setNewConfig, arr };
 };
