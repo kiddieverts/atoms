@@ -29,7 +29,6 @@ export const Pads = ({ onUpdate }: any) => {
   }, [tokenId]);
 
   const handleUpdate = (newState: PadState) => {
-
     const str = stateObjectToStateString(newState);
     console.log('handleUpdate', newState, str)
     setState(newState);
@@ -38,10 +37,10 @@ export const Pads = ({ onUpdate }: any) => {
   };
 
   return <>
-    <AtomsPads
+    {/* <AtomsPads
       onStateUpdate={handleUpdate}
       propsState={state}
-    />
+    /> */}
 
     <pre>
       {JSON.stringify(state)}

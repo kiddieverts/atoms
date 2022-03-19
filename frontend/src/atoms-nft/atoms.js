@@ -2,7 +2,7 @@
 
 import { musicEngine } from './music-engine.js';
 
-const atoms = (settings, initState, showVisuals = true, isLooped = false) => {
+const atoms = (settings, initState, showVisuals = true, isLooped = false, onReadyCallback, frame) => {
   let state = initState;
   let isLoading = true;
 
@@ -18,28 +18,22 @@ const atoms = (settings, initState, showVisuals = true, isLooped = false) => {
   }
 
   const initOnlyMusic = (p5func) => {
-    return new Promise((res, rej) => {
-      new p5func(p5 => {
-        const audioContext = p5.getAudioContext();
-        setupMusic(audioContext, settings, state, isLooped)
-          .then(() => {
-            isLoading = false;
-
-            p5.setup = () => setup(p5);
-            p5.draw = () => onlyMusic(p5);
-            p5.windowResized = () => windowResized(p5);
-            p5.mouseClicked = () => mouseClicked(p5);
-            res();
-          });
-      });
-    })
+    init(p5func);
   }
 
   const setup = (p) => {
+    console.log('P5 Setup')
     const audioContext = p.getAudioContext();
     audioContext.suspend();
+    setupMusic(audioContext, settings, state, isLooped)
+      .then(() => {
+        isLoading = false;
+        onReadyCallback(true);
+      });
+
     if (showVisuals) {
-      setupVisuals(p);
+      console.log('setupvis')
+      setupVisuals(p, frame);
     }
   }
 
@@ -50,24 +44,20 @@ const atoms = (settings, initState, showVisuals = true, isLooped = false) => {
     }
 
     const { currentNotes, isStopped, voices } = playMusic(ctx);
-    settings.drawFn(p, currentNotes, state, p.windowWidth, p.windowHeight, voices);
-    if (isStopped) {
-      p.saveFrames('item', 'png', 1, 1, (data) => {
-        console.log('save', data[0].imageData)
-      });
-      ctx.suspend();
+    if (showVisuals) {
+      settings.drawFn(p, currentNotes, state, p.windowWidth, p.windowHeight, voices);
+      if (isStopped) {
+        p.saveFrames('item', 'png', 1, 1, (data) => {
+          console.log('save', data[0].imageData)
+        });
+        ctx.suspend();
+      }
     }
   }
 
   const windowResized = (p) => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
-
-  const onlyMusic = (p) => {
-    if (isLoading) return;
-    const ctx = p.getAudioContext();
-    playMusic(ctx);
-  }
 
   const mouseClicked = (p) => {
     const audioContext = p.getAudioContext();
@@ -78,15 +68,19 @@ const atoms = (settings, initState, showVisuals = true, isLooped = false) => {
     }
   }
 
-  const setupVisuals = (p) => {
-    const cv = p.createCanvas(p.windowWidth, p.windowHeight);
-    p.background(0);
-    cv.position(0, 0);
+  const setupVisuals = (p, frame) => {
+    const w = !!frame && frame.w ? frame.w : p.windowWidth;
+    const h = !!frame && frame.h ? frame.h : p.windowHeight;
+    const x = !!frame && frame.x ? frame.x : 0;
+    const y = !!frame && frame.y ? frame.y : 0;
+    const cv = p.createCanvas(w, h);
+    p.background(255);
+    cv.position(x, y);
   }
 
   const updatePartial = (newState) => updatePatchRow(+newState[0], +newState[1]);
 
-  return { setup, draw, windowResized, mouseClicked, onlyMusic, updatePartial, init, initOnlyMusic, updateWholePatch }
+  return { setup, draw, windowResized, mouseClicked, updatePartial, init, initOnlyMusic, updateWholePatch }
 }
 
 export default atoms;
